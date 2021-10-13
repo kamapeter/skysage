@@ -1,9 +1,9 @@
 const params = {
-    longitude: 35.696233,
-    latitude: 139.570431,
-    elevation: 50,
-    from_date: 2021-10-12,
-    to_date: 2021-10-13,
+    longitude: "35.696233",
+    latitude: "139.570431",
+    elevation: "50",
+    from_date: "2021-10-12",
+    to_date: "2021-10-13",
     time: "20:00:00"
   }
   const id = "aa6b3850-d02a-4183-ada8-6e9ac5e63633";
