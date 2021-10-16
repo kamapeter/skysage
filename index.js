@@ -19,7 +19,7 @@ loc = document.querySelector('#locate');
     elevation: "387.58840287412346",
     from_date: "2021-10-16",
     to_date: "2021-10-16",
-    time: "20:00:00"
+    time: "19:50:00"
   },
   headers: {
     "X-Requested-With": "XMLHttpRequest",
