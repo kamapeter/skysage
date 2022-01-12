@@ -5,34 +5,587 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
+    <link rel="stylesheet" href="styles.css" title="" type="" />
 </head>
 
 <body>
-  <div id="test"></div>
+  <div id="app">
+    <script type="x/template" id="anim">
+    <transition name='fade-scale'>
+      <div class="anicon" v-if ="showAnim">
+        <div class="teldiv">
+          <img class="" src="imgs/telescope.svg" alt="" />
+        </div>
+      </div>
+    </transition>
+    </script>
+    <anim></anim>
+    <div class="nav-bar">
+      <ul class="nav-list">
+        <li>
+          <span class="link-wrap">
+            <router-link  to="/" exact>
+              <img src="imgs/home.svg" alt="" class="nav-icon"/>
+            </router-link>
+          </span>
+        </li>
+        <li>
+          <span class="link-wrap">
+            <router-link to="/solar-system">
+              <img src="imgs/solar-sys.svg" alt="" class="nav-icon" />
+            </router-link>
+          </span>
+        </li>
+        <li>
+          <span class="link-wrap">
+            <router-link to="/moonPhase">
+              <img src="imgs/moon.svg" alt="" class="nav-icon" />
+            </router-link>
+          </span>
+        </li>
+        <li>
+          <span class="link-wrap">
+            <router-link to="/star-chart">
+              <img src="imgs/const.svg" alt="" class="nav-icon" />
+            </router-link>
+          </span>
+        </li>
+        <li>
+          <span class="link-wrap">
+            <router-link to="/Settings">
+              <img src="imgs/settings.svg" class="nav-icon" />
+            </router-link>
+          </span>
+        </li>
+        
+        <!-- <li>
+          <span class="link-wrap">
+            <router-link to="">
+              <img src="imgs/settings.svg" alt="" class="nav-icon"/>
+            </router-link>
+          </span>
+        </li> -->
+    </div>
+    <transition name="fade" mode="out-in">
+    <keep-alive exclude="MoonPhase,Home,solarSystem,Settings" max="5">
+      <router-view 
+      :is-configured="SharedData.isConfigured()"
+      :from-date="SharedData.from_date"
+      :time="SharedData.time"
+      :bodie-list="bodiesList"
+      style="top: 80px; position:relative">
+      </router-view>
+    </keep-alive>
+    </transition>
+  
+  </div>
+  <script type="text/x-template" id="planetsComp">
+    <section id="component1">
+    <div v-if='isConfigured'>
+    <network-error  :error="error" v-if="error.boolean"/>
+    <template v-else='planetsList'>
+      <div class="hero">
+        <h1 class="txt-center">
+          Above Your Horizon Tonight
+        </h1>
+        <form id="homeForm" name="homeForm">
+        <div class="flex-div d-flex">
+          <div>
+            <h3 class="txt-center">Observation Time:</h3>
+            <div class="clock txt-center">
+              <input type='number' class="hrs" name='hour' :value="dtime[0]" />
+              <input type='number' name='minute' class="min" :value="dtime[1]" />
+              <input type='number' name='seconds' class="sec" :value="dtime[2]" />
+
+            </div> 
+          </div>
+          <div>
+            <h3 class="txt-center">Observation Date:</h3>
+            <div class="clock txt-center">
+            
+              <input type='number' name='day' class="hrs" :value="ddate[2]" />
+              <input type='number' name='month' class="min" :value="ddate[1]" />
+              <input type='number' name ='year' class="yrs" :value="ddate[0]" />
+            </div> 
+          </div>
+        </div>
+        <input-error :error="dateError || timeError"/> 
+        <button class="btn" type="button" @click="parseDateInput"> UPDATE </button>
+       </form>
+        
+      </div>
+      <weather/>
+      <div class="big-card shadow d-flex" v-for='planet in planetsList'>
+        <div class="bcard-head d-flex">
+          <h2 class="bcard-title"> {{ planet.cells[0].name }} </h2>
+          <img :src="'imgs/'+planet.entry.id + '.png'" :alt='planet.entry.id'/>
+        </div>
+        <div class="body d-flex">
+          <div class="props shadow txt-center p-10">
+              <span class="prop-head">
+                <h4>Rise.</h4>
+                <img src="imgs/rise.svg" alt="" class="prop-icon">
+              </span>
+              <h5 class="prop-text">
+                {{ planet.rise }}
+              </h5>
+            </span>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Set</h4>
+              <img src="imgs/set.svg" alt="" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ planet.sett }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>R.A.</h4>
+              <img src="imgs/rat.svg" alt="" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ planet.cells[0].position.equatorial.rightAscension.hours }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Dec.</h4>
+              <img src="imgs/rat.svg" alt="dec icon" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ planet.cells[0].position.equatorial.declination.degrees }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Azm.</h4>
+              <img src="imgs/azm.svg" alt="" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ planet.cells[0].position.horizonal.azimuth.degrees }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Alt.</h4>
+              <img src="imgs/alt.svg" alt="" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ planet.cells[0].position.horizonal.altitude.degrees }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Const.</h4>
+              <img src="imgs/const.svg" alt="" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ planet.cells[0].position.constellation.name }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Magn.</h4> 
+              <img src="imgs/mag.svg" alt="" class="prop-icon">
+            </span>
+           <h5 class="prop-text">
+            {{ planet.cells[0].extraInfo.magnitude }}
+           </h5>
+          </div>
+        </div>
+        </div>
+        
+        
+      </template>
+      
+      </div>
+      <div v-else>
+        <div class="hero f-center">
+          <h1 class="txt-center">StarSage</h1>
+          <div>
+            to enjoy app uolvdd
+          </div>
+          <router-link to="/settings">settings</router-link>
+        </div>
+      </div>
+    </section>
+  </script>
+  
+  <script type="x-template" id="weather">
+  <section id="weatherC">   
+    <h2 class="txt-center">Weather On Obsearvation Date</h2>
+    <h3 class="txt-center">{{weatherResp.hours[SharedData.time.split(':')[0] - 1].icon}} Sky</h3>
+    <div class="d-flex flex-div">
+      <div class="item d-flex f-center">
+        <h5>Precipitation</h5>
+        <img src="imgs/precip.svg" width="65%" alt="" />
+        <h3> {{parseFloat(weatherResp.precip)}}% </h3>
+      </div>
+      <div class="item d-flex f-center">
+        <h5>Visibility</h5>
+        <img src="imgs/visib.svg" width="65%" alt="" />
+        <h3> {{parseFloat(weatherResp.visibility)}}%</h3>
+      </div>
+      <div class="item d-flex f-center">
+        <h5>Cloud Cover</h5>
+        <img src="imgs/cloud.svg" width="65%" alt="" />
+        <h3> {{parseFloat(weatherResp.cloudcover)}}% </h3>
+      </div>
+    </div>
+  </section>
+  </script>
+  
+  <script type="x-template" id="inputError">
+    <transition name="fade-scale">
+      <p v-if="error" class="txt-center txt-danger">{{ error }}</p>
+    </transition>
+  </script>
+  
+  <script type="text/x-template" id="settings">
+    <section id="settingsComp" >
+      <div class="hero f-center" style="background: #fff">
+        <img src="imgs/settingb.svg" width="250px">
+      </div>
+      <div class="big-card">
+        <div class="bcard-head">
+          <h2 class="bcard-title">Time</h2>
+          <img src="imgs/time.svg">
+        </div>
+        <div class="body d-flex">
+          <form class="" id="dateForm" action="" method="get" accept-charset="utf-8" style="margin-bottom: 15px">
+            <fieldset>
+              <legend>Observation Date</legend>
+              <div class="form-group d-flex">
+                <input type="number" name="day" id="" min="5" placeholder="day" :value='ddate[2]' />
+                <input type="number" name="month" id="" :value="ddate[1]" min="1"  placeholder="month" />
+                <input type="number" name="year" placeholder="year" id="" value="" min="5" :value = 'ddate[0]'/>
+              </div>
+              <div class="bordered-box txt-center">
+                {{ fullDate() }}
+              </div>
+              <input-error :error='dateError'/>
+            </fieldset>
+            <fieldset>
+              <legend>Default Observation Time</legend>
+              
+              <div class="form-group d-flex">
+                <input type="number" name="hour" id="" :value="dtime[0]" min="5" placeholder="hours" />
+                <input type="number" name="minute" id="" :value="dtime[1]" min="5" placeholder="minute" />
+              </div>
+              
+              <div class="bordered-box txt-center">
+                {{fullTime()}}
+              </div>
+              <input-error :error="timeError"/>
+            </fieldset>
+            <button type="button" class='btn' @click='parseDateInput'>
+              Update
+            </button>
+                  
+          </form>
+        </div>
+      </div>
+      
+      <div class="big-card d-flex">
+        <div class="bcard-head">
+          <h2 class="bcard-title">Location</h2>
+          <img src="imgs/location.svg" alt="" />
+        </div>
+        <transition name="fade" mode="out-in">
+        <div class="body d-flex f-center" v-if='willShowForm' key="notSet">
+          <h2 class="txt-center">Set Location</h2>
+
+          <form class="">
+            <button type="button" class="btn" @click='setAutoLoc()'>
+              Set Current Location Automatically
+            </button>
+            <input-error :error='autoLocError'/>
+            <div class="sep">
+              <div class="left"></div>
+              <span>OR</span>
+              <div class="right"></div>
+            </div>
+            <fieldset class="or">
+              <h4 class="txt-center">Manually type in Latitude,Longitude and Altitude</h4>
+              <div class="form-group">
+                <input type="number" name="" id="" v-model="ManualData.lng.num" placeholder="Longitude"/>
+                <select name='longitude direction' v-model="ManualData.lng.dir">
+                  <option value="W">West</option>
+                  <option value="E">East</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="number" name="" id="" v-model="ManualData.lat.num" placeholder="Latitude"/>
+                <select name='latitude direction' v-model="ManualData.lat.dir">
+                  <option value="N">North</option>
+                  <option value="S">South</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="number" name="" id="" v-model="ManualData.alt" placeholder="Altitude"/>
+              </div>
+              <input-error :error="manualLocError"/>  
+              <button type="button" class="btn" @click="setManualLoc(ManualData)">
+                Set Location
+              </button>
+            </fieldset>
+          </form>
+        </div>
+        <div class="body d-flex f-center" v-else key="set">
+          <h2 class="txt-center">Location has been setted</h2>
+          <button type="button" class="btn" @click="showForm()">
+            Change Location
+          </button>
+        </div>
+        </transition>
+      </div>
+    </section>
+  </script>
+  <script type="x-template" id="solarSys">
+  <section id="componen1">
+  <div v-if='isConfigured'>
+
+    <network-error :error="error.message" v-if="error.boolean"/>
+    <template v-else='bodiesList'>
+      <div class="hero" >
+        <img src="imgs/solarsys.png" width="100%"style="transform: rotate(180deg); height: 100%">
+        <h1 class="txt-center">
+         Solar System Now
+        </h1>
+      </div>
+      <div class="big-card shadow d-flex" v-for='(body,i) in bodiesList'>
+        <div class="bcard-head d-flex">
+          <h2 class="bcard-title"> {{ body.cells[0].name }} </h2>
+          <img :src="'imgs/'+body.entry.id + '.png'" :alt='body.entry.id'/>
+        </div>
+        <div class="body d-flex">
+          <div class="props shadow txt-center p-10">
+              <span class="prop-head">
+                <h4>Rise.</h4>
+                <img src="imgs/rise.svg" alt="" class="prop-icon">
+              </span>
+              <h5 class="prop-text">
+                {{ body.rise }}
+              </h5>
+            </span>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Set</h4>
+              <img src="imgs/set.svg" alt="" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ body.sett }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>R.A.</h4>
+              <img src="imgs/rat.svg" alt="" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ body.cells[0].position.equatorial.rightAscension.hours }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Dec.</h4>
+              <img src="imgs/rat.svg" alt="dec icon" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ body.cells[0].position.equatorial.declination.degrees }}
+            </h5>
+          </div>
+          
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Const.</h4>
+              <img src="imgs/const.svg" alt="" class="prop-icon">
+            </span>
+            <h5 class="prop-text">
+              {{ body.cells[0].position.constellation.name }}
+            </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Magn.</h4> 
+              <img src="imgs/mag.svg" alt="" class="prop-icon">
+            </span>
+           <h5 class="prop-text">
+            {{ body.cells[0].extraInfo.magnitude }}
+           </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Elongation</h4> 
+              <!-- <img src="imgs/mag.svg" alt="" class="prop-icon"> -->
+            </span>
+           <h5 class="prop-text">
+            {{ body.cells[0].extraInfo.elongation }}
+           </h5>
+          </div>
+          <div class="props shadow txt-center p-10">
+            <span class="prop-head">
+              <h4>Distance</h4> 
+              <!-- <img src="imgs/mag.svg" alt="" class="prop-icon"> -->
+            </span>
+           <h5 class="prop-text">
+            {{ Number(body.cells[0].distance.fromEarth.km).toFixed(2) }}km
+           </h5>
+          </div>
+        </div>
+        </div>
+        
+        
+      </template>
+      
+      </div>
+      <div v-else>
+        <div class="hero f-center">
+          <h1 class="txt-center">StarSage</h1>
+          <div>
+            to enjoy app uolvdd
+          </div>
+          <router-link to="/settings">settings</router-link>
+        </div>
+    </div>
+  </section>    
+  </script>
+  <script type="x-template" id="networkError">
+    <div class='hero'>
+      <img width="40%" src="imgs/ufo.svg" alt=""  style="margin: 5px auto"/>
+      <h2 class='txt-center'>
+        Sorry An Error: {{ error.message }} Occurred.
+      </h2>
+      <h2 class='txt-center'>
+        Try refreshing your browser
+      </h2>
+    </div>
+  </script>
+  <script type="x-template" id="moonPhase">
+  <section>
+  <network-error v-if="error" :error="error"/>
+  <div class="picture-card shadow" v-else='moonData'>
+  <img :src="imageUrl" :class="{stillLoading:stillLoading}" alt="image showing moon phase, rise and set times etc"  @load='stillLoading = false'>
+ <div class="text-box">
+   <h1>
+     {{percentage}}% 
+    </h1>
+    <div class="body d-flex">
+    <div class="props shadow txt-center p-10">
+      <span class="prop-head">
+        <h4>R.A.</h4>
+        <img src="imgs/rat.svg" alt="" class="prop-icon">
+      </span>
+      <h5 class="prop-text">
+       {{ moonData.position.equatorial.rightAscension.hours }}
+        
+      </h5>
+    </div>
+    <div class="props shadow txt-center p-10">
+      <span class="prop-head">
+        <h4>Dec.</h4>
+        <img src="imgs/rat.svg" alt="dec icon" class="prop-icon">
+      </span>
+      <h5 class="prop-text">
+       {{ moonData.position.equatorial.declination.degrees }}
+      </h5>
+    </div>
+    
+    <div class="props shadow txt-center p-10">
+      <span class="prop-head">
+        <h4>Const.</h4>
+        <img src="imgs/const.svg" alt="" class="prop-icon">
+      </span>
+      <h5 class="prop-text">
+       {{ moonData.position.constellation.name }}
+      </h5>
+    </div>
+    <div class="props shadow txt-center p-10">
+      <span class="prop-head">
+        <h4>Magn.</h4> 
+        <img src="imgs/mag.svg" alt="" class="prop-icon">
+      </span>
+     <h5 class="prop-text">
+       {{ moonData.extraInfo.magnitude }}
+     </h5>
+    </div>
+    <div class="props shadow txt-center p-10">
+      <span class="prop-head">
+        <h4>Elongation</h4> 
+      </span>
+     <h5 class="prop-text">
+       {{ moonData.extraInfo.elongation }}
+     </h5>
+    </div>
+    <div class="props shadow txt-center p-10">
+      <span class="prop-head">
+        <h4>Distance</h4> 
+      </span>
+     <h5 class="prop-text">
+       {{ moonData.distance.fromEarth.km }}km
+     </h5>
+    </div>
+  </div>
+  </div>
+</div>
+<anim v-if="requestOccur"/>
+</section>
+</script>
+<script type="x-template" id="starChart">
+<section>
+  <h1 class="txt-center">
+    Generate image for sky area
+  </h1>
+  <network-error v-if="error" :error="error"/>
+  <template v-else>
+  <form action="" method="post" class="txt-center d-flex" id="chartForm">
+    <h3 class="txt-center">Generate image with Constellation Name</h3>
+    <div class="form-group d-flex">
+      <input type="text" list='constList' name="constellation" id="" v-model='inputConst' placeholder="Aquarius"/>
+      <datalist id='constList'>
+        <option v-for="(value,key) in Constellations" :value="key"/>
+      </datalist>
+    </div>
+    <input-error :error='constErr'/>
+    
+    <div class="sep">
+      <div class="left"></div>
+      <span>OR</span>
+      <div class="right"></div>
+    </div>
+    <h3 class="txt-center">Generate Image with Equatorial Co-ordinates of Area</h3>
+    <div class="form-group d-flex inputCoords">
+        <input type="number" name="rightAscension" id="" v-model="inputRA" placeholder="Right Ascension"/>
+        <input type="number" name="declination" v-model="inputDec" placeholder="Declination">
+        <input type="number" v-model="inputZoom" name="zoom" placeholder="zoom">
+    </div>
+    <input-error :error='areaErr'/>
+    <button type="button" class="btn" @click="fetchImg">
+      Generate
+    </button>
+  </form>
+  <span class="imgCon" :class="{stillLoading: stillLoading}" v-show="imageUrl" style="padding-bottom: 77%">
+    <img :src="imageUrl" alt="" @load="scrollToView" class='loadChart' @click="showModal = true"/>
+  </span>
+  <h1 class="txt-center">{{ dConst }} </h1>
+  <transition name="fade">
+    <div class="modal" v-show="showModal">
+      <span class="close" @click="showModal = false">&times;</span>
+      <img :src="imageUrl" alt="" />
+    </div>
+  </transition>
+  </template>
+  <anim v-if="requestOccur"></anim>
+</section>
+</script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="index.js"></script>
-<!--<script type="text/javascript" charset=" utf-8">
-  const params = {
-    longitude: 35.696233,
-    latitude: 139.570431,
-    elevation: 50,
-    from_date: 2021-10-12,
-    to_date: 2021-10-13,
-    time: 20:00:00
-  }
-  const id = "aa6b3850-d02a-4183-ada8-6e9ac5e63633";
-  const secret = "90b0ed4b46299c3d64868f62aaf5933ba2ffd3b3db1637c4b20be02018b748feab99f0b87c6b5890891f5bcf56b4a57fbf08be13c72838d887c53681ce5945833eeffc7dae81d5b29e0803a188877960d61e91021ae2409c848e3021d3822f1a28a632b3a0b5c08134868bef11952a77";
-  const myH = new Headers();
-  myH.append("authorization": `basic ${btoa(`${id}:${secret}`)}`);
-  const request = new Request("https://api.astronomyapi.com/api/v2/bodies/positions", {
-    headers: myH
-  })
-  
-  fetch(request)
-  .then(Response => response.json())
-  .then(data => {document.body.innerHTML = dat})
-  
-</script>-->
+  <script src="js/vue.js"></script>
+  <script src="js/vue-router.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/app.js"></script>
+  <!-- <script src="index.js"></script> -->
 </body>
 
 </html>

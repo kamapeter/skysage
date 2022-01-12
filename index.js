@@ -4,7 +4,7 @@ const params = {
     elevation: "0",
     from_date: "2021-10-15",
     to_date: "2021-10-15",
-    time: "20:00:00"
+    time: "21:00:00"
   }
 var div = document.querySelector('#test'),
 loc = document.querySelector('#locate');
@@ -17,9 +17,9 @@ loc = document.querySelector('#locate');
     longitude: "7.6317913",
     latitude: "8.9993446",
     elevation: "387.58840287412346",
-    from_date: "2021-10-16",
-    to_date: "2021-10-16",
-    time: "19:50:00"
+    from_date: "2021-11-13",
+    to_date: "2021-11-13",
+    time: "20:00:00"
   },
   headers: {
     "X-Requested-With": "XMLHttpRequest",
@@ -27,6 +27,14 @@ loc = document.querySelector('#locate');
     `${id}:${secret}`
     )}`
   }})
-  .then((response) => {div.textContent += JSON.stringify(response.data)
+  .then((response) => {//div.textContent += JSON.stringify(response.data)
     console.log(response.data)
+    t = response.data;
   })
+  
+  function setManualLoc(lat,long,alt) {
+    const latNum = parseFloat(lat.slice(0, -1));
+    const longNum = parseFloat(long.slice(0, -1))
+    const alt = parseFloat(alt)
+    
+  }

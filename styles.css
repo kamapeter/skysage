@@ -1,0 +1,443 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  color: #eee;
+}
+body{
+  background: #222;
+}
+section{
+  padding: 0 0 10px 0;
+}
+.anicon{
+  background: #222;
+  position: fixed;
+  z-index: 2;
+  top: 30px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}    
+.teldiv{
+  width: 50%;
+  height: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: revolve 2s ease-out 0s infinite normal forwards;
+}
+@keyframes revolve{
+  to{
+    transform: translate(-50%, -50%) rotateY(360deg)
+  }
+}
+
+.nav-bar,.nav-list{
+  display: flex;
+  width: 100%;
+  height: 70px;
+  justify-content: space-around;
+  align-items: center;
+  background: #111;
+  border-radius: 2px;
+  padding: 0px;
+  box-shadow: 2px 2px 3px #070707,
+  -5px -1px 27px #1b1b1b;
+}
+.nav-bar{
+  position: fixed;
+  top: 0;
+  z-index: 5;
+}
+.link-wrap a{
+  color: #fff;
+  text-decoration: none;
+}
+.link-wrap{
+  display: inline-flex;
+  margin: 0px;
+  padding: 5px;
+}
+.nav-icon{
+  width: 30px;
+  height: 35px;
+}
+.router-link-active,.router-link-exact-active{
+  /*background-image: radial-gradient(circle, #ff00ff, #dd4cff, #bb67ff, #9b78ff, #8083ff);
+  background-color: #8083ff;*/
+  background-image: linear-gradient(to right top, #8083ff, #9b78ff, #bb67ff, #dd4cff, #ff00ff);
+  padding: 10px;
+  /* transition: all 0.8s; */
+  border-radius: 10px;
+}
+.router-link-active .nav-icon{
+  height: 25px;
+}
+.hide{
+  visibility: hidden;
+}
+.show{
+  visibility: visible;
+}
+.txt-center{
+  text-align: center;
+  margin: 15px;
+}
+.txt-danger{
+  color: #ff03a3
+}
+.nav-list{
+  list-style-type: none;
+  padding: 5px 10px;
+}
+.hero{
+  width: 100%;
+  border-bottom-left-radius: 100px;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  margin: 0 0 25px 0;
+  padding: 20px 10px;
+}
+#weatherC{margin: 10px 0 25px 0px;}
+#weatherC .item {
+  background-color: #333;
+  backdrop-filter: blur(15px);
+  width: 30%;
+  padding: 5px;
+  flex-flow: column wrap;
+  border-radius: 8px;
+}
+#weatherC .flex-div{margin: 0}
+.clock{
+  display: block;
+  width: 150px;
+  overflow-x: hidden;
+  height: 50px;
+  font-size: bold;
+  margin: 0 auto;
+  padding: 5px;
+  background: #111;
+  border-radius: 10px;
+}
+.clock input{
+  background: #262432;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  display: inline-block;
+  height: 100%;
+}
+.clock .yrs{
+  padding: 10px 5px;
+  width: 33%
+}
+
+.shadow{
+  box-shadow: 2px 1px 5px #262432,
+  -2px -1px 5px #2e3135;
+}
+.d-flex{
+  display: flex;
+}
+.f-center{
+  justify-content: center;
+  align-items: center;
+}
+.p-10{
+  padding: 10px;
+}
+.flex-div{
+  flex-flow: row wrap;
+  margin-left: -10px;
+  margin-right: 10px;
+  width: 100%;
+  justify-content: space-around;
+}
+.flex-div>*{
+  width: 35%;
+}
+
+.btn{
+  border: none;
+  outline: none;
+  padding: 10px;
+  background-image: linear-gradient(to right top, #8083ff, #9b78ff, #bb67ff, #dd4cff, #ff00ff);
+  width: 70%;
+  display: block;
+  border-radius: 10px;
+  margin: 15px auto;
+  font-size: 1em;
+  font-weight: bold;
+}
+.big-card {
+  width: 80%;
+  border-radius: 10px;
+  background: #111111;
+  height: 100%;
+  margin: 10px auto;
+  transition: height 1.8s ease-out;
+  flex-flow: row wrap;
+}
+.bcard-head{
+  width: 100%;
+  height: 65px;
+  position: relative;
+  border-bottom: 1px #8083ff solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bcard-head img{
+  filter: drop-shadow(2px 4px 8px #d19f9c);
+  width: 86px;
+  height: 50px;
+  margin-left: 10px;
+  object-fit: contain;
+}
+#settingsComp .bcard-head img{
+  width: 30px;
+}
+.bcard-title{
+  margin: auto 0;
+}
+.props{
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  width: 30%;
+  height: 85px;
+}
+.prop-head{
+  display: inline-flex; 
+  justify-content: space-between;
+}
+.props .prop-text{
+  font-weight: bold;
+  color: #8083ff;
+  word-wrap: break-word;
+  margin-top: 1.3em;
+}
+.prop-head *{
+  display: inline-block;
+}
+.props .prop-icon{
+  width: 20px;
+  margin: auto; 
+}
+img[alt="dec icon"]{
+  transform: rotate(90deg) translateX(3px)
+}
+.big-card .body,.body{
+  width: calc(100% - 10px);
+  margin: 0 5px;
+  position: relative;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-flow: row wrap;
+}
+fieldset {
+  border: 2px solid #8083ff;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  margin: 20px 15px;
+  padding: 8px 0px 0px 0px;
+}
+legend{
+  width: auto;
+  text-align: left;
+  margin-left:10px;
+  font-weight: bold;
+}
+::placeholder{
+  color: #aaa;
+  font-style: italic;
+}
+.bordered-box{
+  border: 1px solid #8083ff;
+  border-radius: 4px;
+  width: 80%;
+  margin: 15px auto 5px auto;
+  padding: 3px;
+  background: #000
+}
+.form-group{
+  margin: 5px auto;
+  width: 80%;
+  justify-content: space-between;
+}
+form.d-flex>*{
+  width: 100%;
+}
+input,select{
+  border: 1px #262432 solid;
+  outline: none;
+  border-radius: 3px;
+  background: #2e3135;
+  padding: 5px;
+  width: 30%
+}
+.or{
+  border: none;
+  width: 100%;
+  border-radius: 0;
+  display: block;
+  margin: 0 auto;
+}
+.or input{
+  width: 60%;
+  margin: 10px 0
+}
+.or legend{
+  text-align: center;
+  margin: 10px;
+  font-size: 2em;
+  /* padding: 10px 0px; */
+}
+.or .form-group{
+  width: 90%;
+  margin: auto;
+}
+.or select{
+  width: 30%
+}
+.or .form-group>*{
+  display: inline-block;
+}
+
+
+.picture-card {
+  width: 300px;
+  border-radius: 10px;
+  margin: 0px auto 10px auto;
+  background-color: #111;
+  flex-flow: row wrap;
+}
+.picture-card img {
+  border-radius: 10px;
+  width: 100%;
+  transition: height 2.6s;
+}
+.picture-card .stillLoading{
+  min-height: 300px;
+  margin-bottom: 15px
+}
+.text-box {
+  margin-top: -20px;
+  padding: 0 10px 10px 10px;
+  text-align: center;
+  overflow: wrap;
+}
+
+/*generate image*/
+#chartForm{
+  flex-flow: column wrap;
+  margin: 20px;
+  align-content: center;
+}
+#chartForm input[name="constellation"]{
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+}
+#chartForm input{
+  padding: 10px 5px;
+  background-color: inherit;
+  border-radius: 8px;
+  border: 1px #8083ff solid
+}
+.sep{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  width: 90%;
+  align-items: unsafe center;
+  margin: 20px auto;
+}
+.right,.left{
+  border: 2px #8083ff solid;
+  width: 45%;
+  height: 1px;
+  margin: 0
+}
+.right{
+  margin-left: auto;
+}
+.left{
+  margin-right: auto;
+}
+.inputCoords input{
+  width: 30%;
+  display: block
+}
+.inputCoords{
+  margin-top: -10px;
+  margin-bottom: 25px;
+}
+.imgCon{
+  width: calc(100%-20px);
+  height: 0;
+  position: relative;
+  display: block;
+  border-radius: 9px;
+  margin: 10px;
+}
+.loadChart{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform: scale(1);
+  opacity: 1;
+  transition: transform 0.7s ease-out,opacity 0.5s ease-out;
+}
+.stillLoading img.loadChart{
+  transform: scale(0.1);
+  opacity: 0.1;
+}
+.modal{
+  position: fixed;
+  z-index: 15;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  padding-top: 100px;
+  background: rgba(0, 0, 0, 1)
+}
+
+.modal .close{
+  position: absolute;
+  right: 15px;
+  top: 5px;
+  font-size: 30px;
+}
+.modal img{
+  width: 120%;
+  height: 80%;
+  display: block;
+  margin:auto;
+}
+.stillLoading{
+  background: #141414;
+  animation: fadeInOut 2s ease-out 0s infinite normal forwards; 
+}
+@keyframes fadeInOut{
+  from{opacity: 0.5}
+  to {opacity: 1}
+}
+.fade-scale-enter,.fade-scale-leave-to{
+  opacity: 0;
+  transform: scale(0)
+}
+.fade-scale-enter-active,.fade-scale-leave-active{
+  transition: all 0.5s ease-out
+}
+.fade-enter,.fade-leave-to{
+  opacity: 0
+}
+.fade-enter-active,.fade-leave-active{
+  transition: opacity 0.5s ease-out
+}
