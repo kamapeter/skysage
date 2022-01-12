@@ -358,11 +358,7 @@
       return {
         SharedData: Store.State, 
         weatherResp: null,
-        /*conditions(){
-          var hr = Store.State.time.split(':')[0] - 1;
-          return this.weatherResp.hours[hr].icon
-        },*/
-        // hour: this.SharedData.split(':')[0],
+        
         uri() {
           return `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${this.SharedData.pos.lat},${this.SharedData.pos.long}/${this.specDate()}?unitGroup=metric&elements=datetime%2Cname%2Caddress%2CresolvedAddress%2Clatitude%2Clongitude%2Chumidity%2Cprecip%2Ccloudcover%2Cvisibility%2Cconditions%2Cdescription%2Cicon&key=R4THCUW49NCMKX86RCKMBJ2G7&contentType=json`
       },
@@ -376,14 +372,12 @@
     },
     created: function() {
       var thee = this;
-      fetch(this.uri())
+
+        axios.get(this.uri())
         .then(response => {
-          response.json()
-            .then(data => {
-              var hr = Number(Store.State.time.split(':')[0]);
-              thee.weatherResp = data.days[0].hours[hr]
-              //.currentConditions
-            })
+          var hr = Number(Store.State.time.split(':')[0]);
+          var con = Array.from(response.data.days[0].hours);
+          thee.weatherResp =  con[hr]
         })
         .catch((e) => {
     
