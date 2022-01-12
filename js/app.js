@@ -153,8 +153,6 @@
           var hrFrac = parseFloat(hr).getDeci();
           var hrs = hr - hrFrac >= 10 ? hr - hrFrac : '0' + (hr - hrFrac),
             mins = Math.floor(hrFrac * 60) >= 10 ? Math.floor(hrFrac * 60) : '0' + Math.floor(hrFrac * 60);
-    
-          console.log({rise,hr,hrs})
           return `${hrs}:${mins}`
         };
         return {
