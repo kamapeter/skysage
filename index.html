@@ -201,14 +201,7 @@
       </template>
       
       </div>
-      <div v-else>
-        <div class="hero f-center">
-          <h1 class="txt-center">StarSage</h1>
-          <div>
-            to enjoy app uolvdd
-          </div>
-          <router-link to="/settings">settings</router-link>
-        </div>
+        <not-configured v-else/>
       </div>
     </section>
   </script>
@@ -236,7 +229,17 @@
     </div>
   </section>
   </script>
-  
+  <script type="x-template" id="notConfigured">
+    <div class="hero f-center">
+      <h1 class="txt-center">StarSage</h1>
+      <div class='txt-center' style= 'font-size:1.3em'>
+        Configure the App by setting it up in the Settings Component   
+        <button type="button" class='btn' style='width:40%'>
+          <router-link to="/Settings">settings</router-link>
+        </button>
+      </div>
+    </div>
+  </script>
   <script type="x-template" id="inputError">
     <transition name="fade-scale">
       <p v-if="error" class="txt-center txt-danger">{{ error }}</p>
@@ -258,7 +261,7 @@
             <fieldset>
               <legend>Observation Date</legend>
               <div class="form-group d-flex">
-                <input type="number" name="day" id="" min="5" placeholder="day" :value='ddate[2]' />
+                <input type="number" name="day" id="" min="1" placeholder="day" :value='ddate[2]' />
                 <input type="number" name="month" id="" :value="ddate[1]" min="1"  placeholder="month" />
                 <input type="number" name="year" placeholder="year" id="" value="" min="5" :value = 'ddate[0]'/>
               </div>
@@ -442,14 +445,7 @@
       </template>
       
       </div>
-      <div v-else>
-        <div class="hero f-center">
-          <h1 class="txt-center">StarSage</h1>
-          <div>
-            to enjoy app uolvdd
-          </div>
-          <router-link to="/settings">settings</router-link>
-        </div>
+      <not-configured v-else/>
     </div>
   </section>    
   </script>
@@ -466,76 +462,80 @@
   </script>
   <script type="x-template" id="moonPhase">
   <section>
-  <network-error v-if="error" :error="error"/>
-  <div class="picture-card shadow" v-else='moonData'>
-  <img :src="imageUrl" :class="{stillLoading:stillLoading}" alt="image showing moon phase, rise and set times etc"  @load='stillLoading = false'>
- <div class="text-box">
-   <h1>
-     {{percentage}}% 
-    </h1>
-    <div class="body d-flex">
-    <div class="props shadow txt-center p-10">
-      <span class="prop-head">
-        <h4>R.A.</h4>
-        <img src="imgs/rat.svg" alt="" class="prop-icon">
-      </span>
-      <h5 class="prop-text">
-       {{ moonData.position.equatorial.rightAscension.hours }}
-        
-      </h5>
+  <template v-if="isConfigured">
+    <network-error v-if="error" :error="error"/>
+    <div class="picture-card shadow" v-else='moonData'>
+    <img :src="imageUrl" :class="{stillLoading:stillLoading}" alt="image showing moon phase, rise and set times etc"  @load='stillLoading = false'>
+   <div class="text-box">
+     <h1>
+       {{percentage}}% 
+      </h1>
+      <div class="body d-flex">
+      <div class="props shadow txt-center p-10">
+        <span class="prop-head">
+          <h4>R.A.</h4>
+          <img src="imgs/rat.svg" alt="" class="prop-icon">
+        </span>
+        <h5 class="prop-text">
+         {{ moonData.position.equatorial.rightAscension.hours }}
+          
+        </h5>
+      </div>
+      <div class="props shadow txt-center p-10">
+        <span class="prop-head">
+          <h4>Dec.</h4>
+          <img src="imgs/rat.svg" alt="dec icon" class="prop-icon">
+        </span>
+        <h5 class="prop-text">
+         {{ moonData.position.equatorial.declination.degrees }}
+        </h5>
+      </div>
+      
+      <div class="props shadow txt-center p-10">
+        <span class="prop-head">
+          <h4>Const.</h4>
+          <img src="imgs/const.svg" alt="" class="prop-icon">
+        </span>
+        <h5 class="prop-text">
+         {{ moonData.position.constellation.name }}
+        </h5>
+      </div>
+      <div class="props shadow txt-center p-10">
+        <span class="prop-head">
+          <h4>Magn.</h4> 
+          <img src="imgs/mag.svg" alt="" class="prop-icon">
+        </span>
+       <h5 class="prop-text">
+         {{ moonData.extraInfo.magnitude }}
+       </h5>
+      </div>
+      <div class="props shadow txt-center p-10">
+        <span class="prop-head">
+          <h4>Elongation</h4> 
+        </span>
+       <h5 class="prop-text">
+         {{ moonData.extraInfo.elongation }}
+       </h5>
+      </div>
+      <div class="props shadow txt-center p-10">
+        <span class="prop-head">
+          <h4>Distance</h4> 
+        </span>
+       <h5 class="prop-text">
+         {{ moonData.distance.fromEarth.km }}km
+       </h5>
+      </div>
     </div>
-    <div class="props shadow txt-center p-10">
-      <span class="prop-head">
-        <h4>Dec.</h4>
-        <img src="imgs/rat.svg" alt="dec icon" class="prop-icon">
-      </span>
-      <h5 class="prop-text">
-       {{ moonData.position.equatorial.declination.degrees }}
-      </h5>
-    </div>
-    
-    <div class="props shadow txt-center p-10">
-      <span class="prop-head">
-        <h4>Const.</h4>
-        <img src="imgs/const.svg" alt="" class="prop-icon">
-      </span>
-      <h5 class="prop-text">
-       {{ moonData.position.constellation.name }}
-      </h5>
-    </div>
-    <div class="props shadow txt-center p-10">
-      <span class="prop-head">
-        <h4>Magn.</h4> 
-        <img src="imgs/mag.svg" alt="" class="prop-icon">
-      </span>
-     <h5 class="prop-text">
-       {{ moonData.extraInfo.magnitude }}
-     </h5>
-    </div>
-    <div class="props shadow txt-center p-10">
-      <span class="prop-head">
-        <h4>Elongation</h4> 
-      </span>
-     <h5 class="prop-text">
-       {{ moonData.extraInfo.elongation }}
-     </h5>
-    </div>
-    <div class="props shadow txt-center p-10">
-      <span class="prop-head">
-        <h4>Distance</h4> 
-      </span>
-     <h5 class="prop-text">
-       {{ moonData.distance.fromEarth.km }}km
-     </h5>
     </div>
   </div>
-  </div>
-</div>
-<anim v-if="requestOccur"/>
+  <anim v-if="requestOccur"/>
+ </template>
+ <not-configured v-else/>
 </section>
 </script>
 <script type="x-template" id="starChart">
 <section>
+<template v-if="isConfigured">
   <h1 class="txt-center">
     Generate image for sky area
   </h1>
@@ -579,6 +579,8 @@
   </transition>
   </template>
   <anim v-if="requestOccur"></anim>
+</template>
+<not-configured v-else/>
 </section>
 </script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

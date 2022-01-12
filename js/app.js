@@ -403,6 +403,9 @@
   Vue.component('network-error', networkError)
   Vue.component('input-error',inputError)
   Vue.component('weather',Weather)
+  Vue.component('not-configured',{
+    template: '#notConfigured'
+  })
   const Home = {
     template: '#planetsComp',
     props: ['isConfigured','bodieList'],
