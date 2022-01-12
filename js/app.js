@@ -16,7 +16,7 @@
       .match(/(\d+)-(\d+)-(\d+)/)[0]
   }
   var Store = Vue.observable({
-    debug: true,
+    debug: false,
     State: {
       //isConfigured: true,
       isConfigured: function() {
@@ -115,7 +115,7 @@
                 dec = Number(item.cells[0].position.equatorial.declination.degrees),
                 name = item.cells[0].id;
                 const {lat,long}= Store.State.pos;
-              riseSet = Store.setRiseSet(long, lat, ra, dec, Store.computed.sideRealAngle, name)
+              riseSet = Store.setRiseSet(Number(long), Number(lat), ra, dec, Store.computed.sideRealAngle, name)
               item.rise = riseSet.rise;
               item.sett = riseSet.sett;
               filtered.push(item)
@@ -154,6 +154,7 @@
           var hrs = hr - hrFrac >= 10 ? hr - hrFrac : '0' + (hr - hrFrac),
             mins = Math.floor(hrFrac * 60) >= 10 ? Math.floor(hrFrac * 60) : '0' + Math.floor(hrFrac * 60);
     
+          console.log({rise,hr,hrs})
           return `${hrs}:${mins}`
         };
         return {
@@ -357,8 +358,12 @@
     template: '#weather',
     data: function (){
       return {
-        SharedData: Store.State,
+        SharedData: Store.State, 
         weatherResp: null,
+        /*conditions(){
+          var hr = Store.State.time.split(':')[0] - 1;
+          return this.weatherResp.hours[hr].icon
+        },*/
         // hour: this.SharedData.split(':')[0],
         uri() {
           return `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${this.SharedData.pos.lat},${this.SharedData.pos.long}/${this.specDate()}?unitGroup=metric&elements=datetime%2Cname%2Caddress%2CresolvedAddress%2Clatitude%2Clongitude%2Chumidity%2Cprecip%2Ccloudcover%2Cvisibility%2Cconditions%2Cdescription%2Cicon&key=R4THCUW49NCMKX86RCKMBJ2G7&contentType=json`
@@ -371,21 +376,22 @@
     computed: {
       
     },
-    created: function (){
+    created: function() {
       var thee = this;
-      axios.get(this.uri())
+      fetch(this.uri())
         .then(response => {
           response.json()
             .then(data => {
-              thee.weatherResp = data.days[0]
+              var hr = Number(Store.State.time.split(':')[0]);
+              thee.weatherResp = data.days[0].hours[hr]
               //.currentConditions
             })
         })
-        .catch((e)=>{
-          
+        .catch((e) => {
+    
         })
-        .finally(()=>{
-          
+        .finally(() => {
+    
         })
     }
   }
