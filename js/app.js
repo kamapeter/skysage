@@ -87,7 +87,7 @@
     },
     setBodiesList(context) {
       var vm = context.SharedData || context;
-      Store.setData('requestOccur', true)
+      Store.setData('requestOccur', false)
       axios.get('https://api.astronomyapi.com/api/v2/bodies/positions', {
           params: {
             longitude: vm.pos.long,
@@ -325,9 +325,12 @@
       },
       setManualLoc(posData) {
         console.log(JSON.stringify(posData))
+        const isNum = function (num) {
+          return typeof num == 'number' && !isNaN(num)
+        }
         const {lat, lng, alt} = posData;
         console.log(lat.dir == 'N',lng.dir == 'W')
-        if (Number(lng.num) && Number(lat.num) && Number(alt)) {
+        if (isNum(lat.num) && isNum(lat.num) && isNum(alt)) {
           const lngNum = lng.dir == "W" ? lng.num : -1 * lng.num,
             latNum = lat.dir == "N" ? lat.num : -1 * lat.num;
           if (latNum <= 90 && latNum >= -90 && lngNum <= 180 && lngNum >= -180) {
@@ -372,7 +375,6 @@
     },
     created: function() {
       var thee = this;
-
         axios.get(this.uri())
         .then(response => {
           var hr = Number(Store.State.time.split(':')[0]);
