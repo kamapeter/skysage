@@ -87,7 +87,7 @@
     },
     setBodiesList(context) {
       var vm = context.SharedData || context;
-      Store.setData('requestOccur', false)
+      Store.setData('requestOccur', true)
       axios.get('https://api.astronomyapi.com/api/v2/bodies/positions', {
           params: {
             longitude: vm.pos.long,
