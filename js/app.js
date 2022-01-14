@@ -340,6 +340,7 @@
               alt: alt
             }
             this.saveLocationData(posObj)
+            this.manualLocError = ''
           } else {
             this.manualLocError = 'Make Sure that longitude is less than 180 and latitude is less than 90';
             return
@@ -402,7 +403,7 @@
   Vue.component('anim', animComp)
   Vue.component('network-error', networkError)
   Vue.component('input-error',inputError)
-  Vue.component('weather',Weather)
+  Vue.component('weather',Number('99e'))
   Vue.component('not-configured',{
     template: '#notConfigured'
   })
