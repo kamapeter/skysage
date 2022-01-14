@@ -331,7 +331,7 @@
         const {lat, lng, alt} = posData;
         console.log(lat.dir == 'N',lng.dir == 'W')
         if (isNum(lat.num) && isNum(lat.num) && isNum(alt)) {
-          const lngNum = lng.dir == "W" ? lng.num : -1 * lng.num,
+          const lngNum = lng.dir == "E" ? lng.num : -1 * lng.num,
             latNum = lat.dir == "N" ? lat.num : -1 * lat.num;
           if (latNum <= 90 && latNum >= -90 && lngNum <= 180 && lngNum >= -180) {
             const posObj = {
