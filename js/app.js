@@ -481,6 +481,7 @@
   }
   
   const MoonPhase = {
+    props: ['isConfigured'],
     template: '#moonPhase',
     data: function() {
       return {
@@ -558,6 +559,7 @@
   }
   
   const starChart = {
+    props: ['isConfigured'],
     template: '#starChart',
     data: function (){
       return {

@@ -66,6 +66,7 @@
           </span>
         </li> -->
     </div>
+    <section class="router-v">
     <transition name="fade" mode="out-in">
     <keep-alive exclude="MoonPhase,Home,solarSystem,Settings" max="5">
       <router-view 
@@ -73,10 +74,11 @@
       :from-date="SharedData.from_date"
       :time="SharedData.time"
       :bodie-list="bodiesList"
-      style="top: 80px; position:relative">
+      style=" position:relative">
       </router-view>
     </keep-alive>
     </transition>
+    </section>
   
   </div>
   <script type="text/x-template" id="planetsComp">

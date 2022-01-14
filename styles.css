@@ -10,6 +10,27 @@ body{
 section{
   padding: 0 0 10px 0;
 }
+@media (min-width: 800px) {
+  #app{
+    width: 600px;
+    margin: 0 auto;
+  }
+  #app .nav-bar, #app .nav-list{
+    width: 100%;
+    margin: 0 auto;  
+  }
+  #app .nav-bar{
+    position: relative;
+  }
+  #app .router-v{position: static}
+  #app .big-card{
+    max-width: 300px;
+  }
+}
+.router-v{
+  position: relative;
+  top: 75px;
+}
 .anicon{
   background: #222;
   position: fixed;
@@ -43,13 +64,14 @@ section{
   background: #111;
   border-radius: 2px;
   padding: 0px;
-  box-shadow: 2px 2px 3px #070707,
-  -5px -1px 27px #1b1b1b;
-}
+  }
 .nav-bar{
   position: fixed;
   top: 0;
   z-index: 5;
+  box-shadow: 2px 2px 3px #070707,
+  -5px -1px 27px #1b1b1b;
+
 }
 .link-wrap a{
   color: #fff;
