@@ -595,8 +595,9 @@
           thy = this;
         if (this.inputConst){
           type = 'constellation';
-          if(thy.Constellations[this.inputConst])
-            parameters['constellation'] = thy.Constellations[thy.inputConst];
+          var key = this.inputConst.trim().toLowerCase();
+          if(thy.Constellations[key])
+            parameters['constellation'] = thy.Constellations[key];
           else{
             thy.constErr = 'Invalid Constellation Name'
             return
