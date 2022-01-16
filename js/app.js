@@ -16,7 +16,7 @@
       .match(/(\d+)-(\d+)-(\d+)/)[0]
   }
   var Store = Vue.observable({
-    debug: false,
+    debug: true,
     State: {
       //isConfigured: true,
       isConfigured: function() {
@@ -398,12 +398,20 @@
   
   const networkError = {
     template: '#networkError',
-    props: ['error']
+    props: ['error'],
+    methods: {
+      // reset(){
+      //   Store.setData('homeError',{
+      //     boolean: false,
+      //     message: null
+      //   }, 'computed')
+      // }
+    }
   }
   Vue.component('anim', animComp)
   Vue.component('network-error', networkError)
   Vue.component('input-error',inputError)
-  Vue.component('weather',Number('99e'))
+  Vue.component('weather', Weather)
   Vue.component('not-configured',{
     template: '#notConfigured'
   })
