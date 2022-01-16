@@ -16,7 +16,7 @@
       .match(/(\d+)-(\d+)-(\d+)/)[0]
   }
   var Store = Vue.observable({
-    debug: true,
+    debug: false,
     State: {
       //isConfigured: true,
       isConfigured: function() {
@@ -326,7 +326,7 @@
       setManualLoc(posData) {
         console.log(JSON.stringify(posData))
         const isNum = function (num) {
-          return typeof Number(num) == 'number' && !isNaN(num)
+          return typeof Number(num) == 'number' && !isNaN(num) && num != ''
         }
         const {lat, lng, alt} = posData;
         console.log(lat.dir == 'N',lng.dir == 'W')
