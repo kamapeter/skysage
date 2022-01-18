@@ -135,7 +135,7 @@
     setRiseSet(long, lat, ra, dec, st,name) {
         var h0;
         if (name == 'sun')
-          h0 = 0.8333;
+          h0 = -0.8333;
         else if(name == 'moon')
           h0 = 0.125
         else
@@ -536,8 +536,8 @@
                 textColor: "#fff"
               },
               observer: {
-                latitude: vm.pos.lat,
-                longitude: vm.pos.long,
+                latitude: Number(vm.pos.lat),
+                longitude: Number(vm.pos.long),
                 date: vm.from_date
               },
               view: {
