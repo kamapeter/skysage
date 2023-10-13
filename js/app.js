@@ -350,6 +350,17 @@
           return
         }
       },
+      authenticate (){
+        function onIncompletePaymentFound(payment) { return 0 };
+        var scopes = ['payments'];
+
+
+        Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
+             alert(`Hi there! You're ready to make payments!`);
+        }).catch(function(error) {
+             alert(error);
+         });
+      },
       parseDateInput(e){
         var form = document.querySelector('#dateForm');
         Store.setCheckDate(this,e,form)
