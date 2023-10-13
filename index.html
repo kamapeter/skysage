@@ -10,7 +10,10 @@
 
 <body>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script>Pi.init({ version: "2.0", sandbox: true})</script>
+  <script>
+      Pi.init({ version: "2.0", sandbox: true})
+      
+  </script>
   <div id="app">
     <script type="x/template" id="anim">
     <transition name='fade-scale'>
@@ -340,7 +343,11 @@
                 Set Location
               </button>
             </fieldset>
+            <button type="button" class="btn" @click="">
+                Sign In
+  </button>
           </form>
+      
         </div>
         <div class="body d-flex f-center" v-else key="set">
           <h2 class="txt-center">Location has been setted</h2>
