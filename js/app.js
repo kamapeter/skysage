@@ -356,7 +356,7 @@
 
 
         Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
-             alert(`Hi there ${auth['user']['username']}! You're ready to make payments!`);
+             alert(`Hi there ${auth.user.username}! You're ready to make payments!`);
         }).catch(function(error) {
              alert(error);
          });
