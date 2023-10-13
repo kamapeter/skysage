@@ -352,7 +352,7 @@
       },
       authenticate (){
         function onIncompletePaymentFound(payment) { return 0 };
-        var scopes = ['payments'];
+        var scopes = ['username','payments'];
 
 
         Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
