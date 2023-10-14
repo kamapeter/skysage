@@ -2,6 +2,7 @@
      JSON.parse(localStorage.getItem('savedData')):
      null;*/
      var t;
+alert('good');
   var isContained = function(prop) {
     if (!SavedObj)
       return false;
