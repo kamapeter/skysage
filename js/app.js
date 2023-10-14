@@ -2,7 +2,6 @@
      JSON.parse(localStorage.getItem('savedData')):
      null;*/
      var t;
-alert('good');
   var isContained = function(prop) {
     if (!SavedObj)
       return false;
@@ -352,6 +351,7 @@ alert('good');
         }
       },
       authenticate (){
+        alert('good');
         function onIncompletePaymentFound(payment) { return 0 };
         var scopes = ['username','payments'];
 
