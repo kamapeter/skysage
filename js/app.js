@@ -359,12 +359,14 @@
         var scopes = ['username','payments'];
         var thee = this;
         Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
-             alert(`Hi there ${auth.user.username}! You're ready to make payments!`);
              thee.auth.signed = true;
              thee.auth.result = auth.user;
         }).catch(function(error) {
              alert('error');
          });
+      },
+      pay(){
+        
       },
       parseDateInput(e){
         var form = document.querySelector('#dateForm');
