@@ -254,6 +254,10 @@
       return {
         SharedData: Store.State,
         willShowForm: !this.isConfigured,
+        auth: {
+          signed: false,
+          result: null
+        },
         //year: this.fromDate.split('-')[0],
         ddate: Store.State.from_date.split('-'),
         dtime: Store.State.time.split(':'),
@@ -351,13 +355,13 @@
         }
       },
       authenticate (){
-        alert('good');
         function onIncompletePaymentFound(payment) { return 0 };
         var scopes = ['username','payments'];
-
-
+        var thee = this;
         Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
              alert(`Hi there ${auth.user.username}! You're ready to make payments!`);
+             thee.auth.signed = true;
+             thee.auth.result = auth.user;
         }).catch(function(error) {
              alert('error');
          });
