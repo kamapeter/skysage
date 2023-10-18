@@ -343,9 +343,6 @@
                 Set Location
               </button>
             </fieldset>
-            <button type="button" class="btn" @click="authenticate()">
-                Sign In
-  </button>
           </form>
       
         </div>
@@ -353,6 +350,12 @@
           <h2 class="txt-center">Location has been setted</h2>
           <button type="button" class="btn" @click="showForm()">
             Change Location
+          </button>
+        </div>
+        <div class="body d-flex f-center" v-else key="set">
+          <h2 class="txt-center">Support Project</h2>
+          <button type="button" class="btn" @click="authenticate()">
+                Sign In
           </button>
         </div>
         </transition>
