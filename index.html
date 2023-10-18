@@ -357,11 +357,10 @@
           <div class="bcard-head">
             <h2 class="bcard-title">Support Project</h2>
           </div>
-          <div class="body d-flex f-center">
-            <div v-if="auth.signed">
+          <div v-if="auth.signed" class="body d-flex f-center">
               you're now signed in as {auth.result.username}
-            </div>
-            <div v-else>
+          </div>
+          <div class="body d-flex f-center" v-else>
             <button type="button" class="btn" @click="authenticate()">
                 Sign In
             </button>
