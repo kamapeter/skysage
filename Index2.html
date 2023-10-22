@@ -17,7 +17,7 @@
         const responseText = document.getElementById('response-output')
 
         fetchBtn.addEventListener('click', async () => {
-          const response = await fetch('node_modules/@netlify/functions/hello-world').then(
+          const response = await fetch('./node_modules/@netlify/functions/hello-world').then(
             response => response.json()
           )
 
