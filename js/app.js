@@ -366,7 +366,28 @@
          });
       },
       pay(){
+        var PaymentData = {
+          amount: number,
+          memo: string,
+          metadata: Object,
+        };
         
+        var PaymentCallbacks = {
+          onReadyForServerApproval: (paymentId) => {
+            
+          },
+          onReadyForServerCompletion: (paymentId,txid) => {
+            
+          },
+          onCancel: (paymentId) =>{
+            
+          },
+          onError: (error, PaymentDTO) => {
+            
+          },
+        };
+        
+        Pi.createPayment(paymentData,callbacks)
       },
       parseDateInput(e){
         var form = document.querySelector('#dateForm');
