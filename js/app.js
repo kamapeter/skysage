@@ -373,11 +373,11 @@
             orderID: 1
           },
         };
-        const axiosClient = axios.create({ baseURL: ``, timeout: 20000, withCredentials: true});
+        const axiosClient = axios.create({ baseURL: `https://skysage.netlify.app/.netlify/`, timeout: 20000, withCredentials: true});
 
         var PaymentCallbacks = {
            onReadyForServerApproval: (paymentId)=>{
-            
+            alert("onReadyForServerApproval")
           },
           onReadyForServerCompletion: (paymentId,txid) => {
             
@@ -390,7 +390,7 @@
           },
         };
         
-        Pi.createPayment(paymentData,callbacks)
+        Pi.createPayment(paymentData, PaymentCallbacks)
       },
       parseDateInput(e){
         var form = document.querySelector('#dateForm');
