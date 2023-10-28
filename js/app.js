@@ -378,8 +378,9 @@
         var PaymentCallbacks = {
            onReadyForServerApproval: (paymentId)=>{
             alert("onReadyForServerApproval")
-            axios.post(
+            fetch(
               "https://skysage.netlify.app/.netlify/functions/approvePay",{
+                method: 'POST',
                 body: JSON.stringify({
                   payId: paymentId
                 })
