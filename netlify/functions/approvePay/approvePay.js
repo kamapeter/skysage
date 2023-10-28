@@ -3,16 +3,22 @@ export const handler = async (event, context) => {
   const payId = JSON.parse(event.body)
   const platformAPI = `api.minepi.com/v2/payments/${payId.payId}/approve`
 
-  fetch(
+  var res = await fetch(
     platformAPI,{
       method: "POST",
       headers: {
         'Authorization': 'eopkkppz0wtscvdmkbbzpdqesvnzgotbtnghlnpzqqaghwhwvjatt6b9nfk3uvh8'
       }
     }
-    ).then((res)=>{
+    )
+  var resSend = await res.json()
+  return {
+    body: JSON.stringify(resSend)
+  }
+}/*.then((res)=>{
       return {
-    statusCode: 200
+    statusCode: 200,
+    body: res
   }
     })
     .catch((error)=>{
@@ -21,4 +27,4 @@ export const handler = async (event, context) => {
         body: JSON.stringify(error)
       }
     })
-}
+}*/
