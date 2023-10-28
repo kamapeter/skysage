@@ -384,9 +384,7 @@
                   payId: paymentId
                 })
               }).then(
-                (res) => {
-                  alert(JSON.stringify(res))
-                }
+                (res) =>{ return false}
                 )
           },
           onReadyForServerCompletion: (paymentId,txid) => {
