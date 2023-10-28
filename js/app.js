@@ -378,6 +378,7 @@
         var PaymentCallbacks = {
            onReadyForServerApproval: (paymentId)=>{
             alert("onReadyForServerApproval")
+            
           },
           onReadyForServerCompletion: (paymentId,txid) => {
             
