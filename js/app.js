@@ -367,13 +367,17 @@
       },
       pay(){
         var PaymentData = {
-          amount: number,
-          memo: string,
-          metadata: Object,
+          amount: 1,
+          memo: "donation for dev",
+          metadata: {
+            orderID: 1
+          },
         };
-        
+        const axiosClient = axios.create({ baseURL: `https://skysage.netlify.app/.netlify/`, timeout: 20000, withCredentials: true});
+
         var PaymentCallbacks = {
-          onReadyForServerApproval: (paymentId) => {
+           onReadyForServerApproval: (paymentId)=>{
+            alert("onReadyForServerApproval")
             
           },
           onReadyForServerCompletion: (paymentId,txid) => {
@@ -387,7 +391,7 @@
           },
         };
         
-        Pi.createPayment(paymentData,callbacks)
+        Pi.createPayment(PaymentData, PaymentCallbacks)
       },
       parseDateInput(e){
         var form = document.querySelector('#dateForm');
