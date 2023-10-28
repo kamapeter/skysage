@@ -367,9 +367,11 @@
       },
       pay(){
         var PaymentData = {
-          amount: number,
-          memo: string,
-          metadata: Object,
+          amount: 1,
+          memo: "donation for dev",
+          metadata: {
+            orderID: 1
+          },
         };
         
         var PaymentCallbacks = {
