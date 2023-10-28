@@ -1,15 +1,18 @@
 import fetch from 'node-fetch'
 export const handler = async (event, context) => {
-  const eventBody = JSON.parse(event.body)
-  const platformAPI = 'https://pokeapi.co/api/v2/pokedex/' + eventBody.region
+  const payId = JSON.parse(event.body)
+  const platformAPI = `api.minepi.com/v2/payments/${payId.payId}approve`
 
-  const response = await fetch(platformAPI)
-  const data = await response.json()
+  await fetch(
+    platformAPI,{
+      method: "POST",
+      headers: {
+        'Authorization': 'eopkkppz0wtscvdmkbbzpdqesvnzgotbtnghlnpzqqaghwhwvjatt6b9nfk3uvh8'
+      }
+    }
+    )
 
   return {
-    statusCode: 200,
-    body: JSON.stringify({
-      pokemon: data.pokemon_entries
-    })
+    statusCode: 200
   }
 }
