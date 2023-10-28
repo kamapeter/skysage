@@ -386,7 +386,10 @@
                 })
               }).then(
                 alert("approval in progress")
-                )
+                ).catch(e=>{
+                  alert(e.body)
+                })
+                  
           },
           onReadyForServerCompletion: (paymentId,txid) => {
             
