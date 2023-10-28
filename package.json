@@ -1,0 +1,22 @@
+{
+  "name": "skysage",
+  "version": "1.0.0",
+  "description": "ama do this",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamapeter/skysage.git"
+  },
+  "author": "kamapeter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kamapeter/skysage/issues"
+  },
+  "homepage": "https://github.com/kamapeter/skysage#readme",
+  "devDependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
