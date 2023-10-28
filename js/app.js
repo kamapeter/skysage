@@ -390,7 +390,7 @@
           },
         };
         
-        Pi.createPayment(paymentData, PaymentCallbacks)
+        Pi.createPayment(PaymentData, PaymentCallbacks)
       },
       parseDateInput(e){
         var form = document.querySelector('#dateForm');
