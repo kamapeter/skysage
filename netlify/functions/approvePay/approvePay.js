@@ -6,9 +6,9 @@ export const handler = async (event, context) => {
   var res = await fetch(
     platformAPI,{
       method: "POST",
-      headers: {
+      /*headers: {
         'Authorization': 'eopkkppz0wtscvdmkbbzpdqesvnzgotbtnghlnpzqqaghwhwvjatt6b9nfk3uvh8'
-      }
+      }*/
     }
     )
   var resSend = await res.json()
