@@ -386,7 +386,7 @@
                 })
               }).then((res)=>{
                 if (res.statusCode == 200) alert("approval in progress");
-                else alert(res);
+                else alert(JSON.stringify(res));
               }).catch((e)=>{
                   alert(e.body)
                 })
