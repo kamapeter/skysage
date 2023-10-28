@@ -3,7 +3,7 @@ export const handler = async (event, context) => {
   const eventBody = JSON.parse(event.body)
   const platformAPI = 'https://pokeapi.co/api/v2/pokedex/' + eventBody.region
 
-  const response = axios.get(POKE_API)
+  const response = axios.get(platformAPI)
   const data = await response.json()
 
   return {
