@@ -384,9 +384,9 @@
                 body: JSON.stringify({
                   payId: paymentId
                 })
-              }).then(
-                alert("approval in progress")
-                ).catch(e=>{
+              }).then((res)=>{
+                if (res.statusCode == 200) alert("approval in progress");
+              }).catch(e=>{
                   alert(e.body)
                 })
                   
