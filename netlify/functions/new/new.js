@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+const axios = require('axios'); 
 
 export const handler = async (event, context) => {
   const eventBody = JSON.parse(event.body)

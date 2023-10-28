@@ -388,7 +388,16 @@
                 )
           },
           onReadyForServerCompletion: (paymentId,txid) => {
-            
+            fetch(
+              "https://skysage.netlify.app/.netlify/functions/completePay",{
+                method: 'POST',
+                body: JSON.stringify({
+                  payId: paymentId,
+                  txid: txid
+                })
+              }).then(
+                (res) =>{ return false}
+                )
           },
           onCancel: (paymentId) =>{
             
