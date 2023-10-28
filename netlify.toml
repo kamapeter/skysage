@@ -9,7 +9,7 @@
             ## Not needed for static site generators.
               #[[redirects]]
                 #  from = "/*"
-                  #  to = "/index1.html"
+                  #  to = "/index.html"
                     #  status = 200
 
                       ## (optional) Settings for Netlify Dev
