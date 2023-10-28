@@ -373,9 +373,10 @@
             orderID: 1
           },
         };
-        
+        const axiosClient = axios.create({ baseURL: ``, timeout: 20000, withCredentials: true});
+
         var PaymentCallbacks = {
-          onReadyForServerApproval: (paymentId) => {
+           onReadyForServerApproval: (paymentId)=>{
             
           },
           onReadyForServerCompletion: (paymentId,txid) => {
