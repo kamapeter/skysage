@@ -6,7 +6,7 @@ export const handler = async (event, context) => {
   var res = await fetch(
     platformAPI,{
       method: "POST",
-      //body: {txid: pay.txid},
+      body: JSON.stringify({txid: pay.txid}),
       headers: {
         'Authorization': 'Key eopkkppz0wtscvdmkbbzpdqesvnzgotbtnghlnpzqqaghwhwvjatt6b9nfk3uvh8'
       }
