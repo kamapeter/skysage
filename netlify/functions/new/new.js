@@ -11,7 +11,7 @@ export const handler = async (event, context) => {
     statusCode: 200,
     body: JSON.stringify({
       ifAxios: !!axios,
-      pokemon: response.pokemon_entries,
+      pokemon: response.data.pokemon_entries,
     })
   }
 }
