@@ -360,7 +360,7 @@
               "https://skysage.netlify.app/.netlify/functions/incompletePay",{
                 method: 'POST',
                 body: JSON.stringify({
-                  payment: payment 
+                  pay: payment 
                 })
               }).then(
                 (res) =>{ return false}

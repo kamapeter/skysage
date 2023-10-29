@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 const axios = require('axios');
 export const handler = async (event, context) => {
-  const paymentInfo = JSON.parse(event.body).payment;
+  const paymentInfo = JSON.parse(event.body).pay;
   console.log(paymentInfo)
   const payId = paymentInfo.identifier;
   const txid = paymentInfo.transaction.txid;
