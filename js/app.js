@@ -356,7 +356,7 @@
       },
       authenticate (){
         function onIncompletePaymentFound(payment) { 
-          /*fetch(
+          fetch(
               "https://skysage.netlify.app/.netlify/functions/incompletePay",{
                 method: 'POST',
                 body: JSON.stringify({
@@ -364,8 +364,7 @@
                 })
               }).then(
                 (res) =>{ return false}
-                )*/
-            alert(JSON.stringify(payment))
+                )
         };
         var scopes = ['username','payments'];
         var thee = this;
