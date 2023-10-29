@@ -7,7 +7,7 @@ export const handler = async (event, context) => {
     platformAPI,{
       method: "POST",
       headers: {
-        'Authorization': 'Key eopkkppz0wtscvdmkbbzpdqesvnzgotbtnghlnpzqqaghwhwvjatt6b9nfk3uvh8'
+        'Authorization': `Key ${process.env.API_KEY}`
       }
     }
     )
