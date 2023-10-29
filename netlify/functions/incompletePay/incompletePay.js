@@ -8,7 +8,7 @@ export const handler = async (event, context) => {
 
   var res = await axios.post(
     platformAPI,{
-      txid
+      'txid': txid
     },{
       headers: {
         'Authorization': 'Key eopkkppz0wtscvdmkbbzpdqesvnzgotbtnghlnpzqqaghwhwvjatt6b9nfk3uvh8'
