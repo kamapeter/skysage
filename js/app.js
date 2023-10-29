@@ -355,7 +355,18 @@
         }
       },
       authenticate (){
-        function onIncompletePaymentFound(payment) { alert("i am called") };
+        function onIncompletePaymentFound(payment) { 
+          /*fetch(
+              "https://skysage.netlify.app/.netlify/functions/incompletePay",{
+                method: 'POST',
+                body: JSON.stringify({
+                  'payment': payment 
+                })
+              }).then(
+                (res) =>{ return false}
+                )*/
+            alert(JSON.stringify(payment))
+        };
         var scopes = ['username','payments'];
         var thee = this;
         Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
