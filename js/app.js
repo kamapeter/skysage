@@ -356,16 +356,15 @@
       },
       authenticate (){
         function onIncompletePaymentFound(payment) { 
-          /*fetch(
+          fetch(
               "https://skysage.netlify.app/.netlify/functions/incompletePay",{
                 method: 'POST',
                 body: JSON.stringify({
-                  pay: payment 
+                  payId: payment.identifier,
+                  'txid': payment.transaction.txid
                 })
-              })*/
-              axios.post(
-                'https://skysage.netlify.app/.netlify/functions/incompletePay',{payment}
-                ).then(
+              })
+              .then(
                 (res) =>{ return false}
                 )
         };
