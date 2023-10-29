@@ -15,7 +15,7 @@ export const handler = async (event, context) => {
       'txid': txid
     },{
       headers: {
-        'Authorization': 'Key eopkkppz0wtscvdmkbbzpdqesvnzgotbtnghlnpzqqaghwhwvjatt6b9nfk3uvh8'
+        'Authorization': `Key ${process.env.API_KEY}`
       }
     }
     )
