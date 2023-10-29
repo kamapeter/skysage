@@ -3,7 +3,7 @@ const axios = require('axios');
 export const handler = async (event, context) => {
   const payment = JSON.parse(event.body);
   const payId = payment.identifier;
-  const txid = payment.transaction.txid;
+  //const txid = payment.transaction.txid;
   //const payId = "uaHVqgqoIhlSKNV1WLGnGSRCpOCw"
   //const txid = "7cb39f257c3a675b9ab43d4f7f2284907f708e2bb804cb4c8dd77f4bdaaa7fa6";
   console.log(payment)
