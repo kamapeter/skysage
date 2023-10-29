@@ -6,12 +6,12 @@ export const handler = async (event, context) => {
   const POKE_API = 'https://pokeapi.co/api/v2/pokedex/' + eventBody.region
 
   const response = await axios.get(POKE_API)
-  const data = response
+  //const data = response
   return {
     statusCode: 200,
     body: JSON.stringify({
       ifAxios: !!axios,
-      pokemon: data.pokemon_entries,
+      pokemon: response.pokemon_entries,
     })
   }
 }
