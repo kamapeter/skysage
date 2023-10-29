@@ -1,11 +1,11 @@
 import fetch from 'node-fetch'
 const axios = require('axios');
 export const handler = async (event, context) => {
-  const payment = JSON.parse(event.body);
-  //const payId = payment.identifier;
-  //const txid = payment.transaction.txid;
-  const payId = "uaHVqgqolhISKNV1WLGnGSRCPOCw"
-  const txid = "7cb39f257c3a675b9ab43d4f7f2284907f708e2bb804cb4c8dd77f4bdaaa7fa6";
+  const payment = JSON.parse(event.body.payment);
+  const payId = payment.identifier;
+  const txid = payment.transaction.txid;
+  //const payId = "uaHVqgqolhISKNV1WLGnGSRCPOCw"
+  //const txid = "7cb39f257c3a675b9ab43d4f7f2284907f708e2bb804cb4c8dd77f4bdaaa7fa6";
   console.log(payId,txid)
   const platformAPI = `https://api.minepi.com/v2/payments/${payId}/complete`
 
