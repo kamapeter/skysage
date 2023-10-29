@@ -363,8 +363,7 @@
                   payId: payment.identifier,
                   'txid': payment.transaction.txid
                 })
-              })
-              .then(
+              }).then(
                 (res) =>{ return false}
                 )
         };
