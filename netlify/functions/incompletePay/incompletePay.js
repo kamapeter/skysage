@@ -5,6 +5,7 @@ export const handler = async (event, context) => {
   console.log(paymentInfo)
   const payId = paymentInfo.identifier;
   const txid = paymentInfo.transaction.txid;
+  console.log(payId,txid);
   //const payId = "uaHVqgqoIhlSKNV1WLGnGSRCpOCw"
   //const txid = "7cb39f257c3a675b9ab43d4f7f2284907f708e2bb804cb4c8dd77f4bdaaa7fa6";
   const platformAPI = `https://api.minepi.com/v2/payments/${payId}/complete`
@@ -19,6 +20,6 @@ export const handler = async (event, context) => {
     }
     )
   return {
-    body: JSON.stringify(res)
+    body: 'JSON.stringify(res)'
   }
 }
