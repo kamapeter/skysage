@@ -7,12 +7,11 @@ export const handler = async (event, context) => {
 
   const response = await fetch(POKE_API)
   const data = await response.json()
-  const newData = {
-    'ifAxios': !!axios,
-    'data': data.pokeman_entries
-  }
   return {
     statusCode: 200,
-    body: JSON.stringify(newData)
+    body: JSON.stringify({
+      ifAxios: !!axios,
+      pokemon: data.pokemon_entries,
+    })
   }
 }
