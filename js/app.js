@@ -140,24 +140,26 @@
     },
     setRiseSet(long, lat, ra_deg, dec_deg, gst0_deg, name) {
     // Inputs:
-    // long: longitude in degrees (positive east)
+    // long: longitude in degrees (positive east, negative west - your app's convention)
     // lat: latitude in degrees
     // ra_deg: right ascension at 0h UT in degrees
     // dec_deg: declination at 0h UT in degrees
     // gst0_deg: Greenwich Sidereal Time at 0h UT in degrees
     // name: 'sun', 'moon', or other
-    if (typeof gst0_deg !== 'number' || isNaN(gst0_deg) || gst0_deg === null) {
+
+    if (typeof gst0_deg !== 'number' || isNaN(gst0_deg)) {
         console.error('gst0_deg is invalid:', gst0_deg);
         return { rise: '—', sett: '—' };
     }
+
     const toRad = deg => deg * Math.PI / 180;
     const toDeg = rad => rad * 180 / Math.PI;
 
-    // Horizon altitude correction (standard values)
+    // Horizon altitude correction
     let h0;
-    if (name === 'sun') h0 = -0.8333;     // refraction + semi-diameter
-    else if (name === 'moon') h0 = 0.125; // Moon: semi-diameter dominates
-    else h0 = -0.5667;                   // planets/stars: refraction only
+    if (name.toLowerCase() === 'sun') h0 = -0.8333;     // refraction + semi-diameter
+    else if (name.toLowerCase() === 'moon') h0 = 0.125;  // semi-diameter dominates
+    else h0 = -0.5667;                                  // planets: refraction only
 
     const sin_h0 = Math.sin(toRad(h0));
     const sin_lat = Math.sin(toRad(lat));
@@ -167,62 +169,34 @@
 
     let cos_H0 = (sin_h0 - sin_lat * sin_dec) / (cos_lat * cos_dec);
 
-    // Clamp cos_H0 to the valid range [-1, 1] to prevent NaN from Math.acos()
+    // Clamp to prevent NaN from acos
     cos_H0 = Math.max(-1, Math.min(1, cos_H0));
-    
-    // Now safe to check for no rise/set
-    if (Math.abs(cos_H0) >= 1) {  // Use >= to catch exact 1 or -1 from clamping
-        return { rise: "—", sett: "—" };
+
+    if (Math.abs(cos_H0) >= 1) {
+        return { rise: "—", sett: "—" }; // circumpolar or never rises
     }
 
     const H0_deg = toDeg(Math.acos(cos_H0));
-
-    //const H0_deg = toDeg(Math.acos(Math.max(-1, Math.min(1, cos_H0))));
     const H0_hours = H0_deg / 15;
 
-    // Convert RA and GST to hours
     const alpha_hours = ra_deg / 15;
     const gst0_hours = gst0_deg / 15;
 
-    // Local sidereal time at transit (in hours)
-    const lst_transit = alpha_hours + long / 15; // long in hours
+    // KEY FIX: Flip longitude sign because standard formula expects west positive
+    const lon_hours = -long / 15;  // Convert your east-positive long to west-positive
+
+    // Local sidereal time at upper transit (culmination)
+    const lst_transit = alpha_hours + lon_hours;
 
     // LST at rise/set
     const lst_rise = lst_transit - H0_hours;
     const lst_set  = lst_transit + H0_hours;
 
     // Target GST at rise/set
-    const target_gst_rise = lst_rise - long / 15;
-    const target_gst_set  = lst_set  - long / 15;
+    const target_gst_rise = lst_rise - lon_hours;
+    const target_gst_set  = lst_set  - lon_hours;
 
-    // Normalize to 0-24
-    const normalize = x => ((x % 24) + 24) % 24;
-
-    const gst_rise_norm = normalize(target_gst_rise);
-    const gst_set_norm  = normalize(target_gst_set);
-
-    // Convert to UT using accurate sidereal rate
-    const sidereal_rate = 1.00273790935;
-    let ut_rise = (gst_rise_norm - gst0_hours) / sidereal_rate;
-    let ut_set  = (gst_set_norm  - gst0_hours) / sidereal_rate;
-
-    ut_rise = normalize(ut_rise);
-    ut_set  = normalize(ut_set);
-
-    // Format as HH:MM
-    const formatTime = hours => {
-        const h = Math.floor(hours);
-        const m = Math.round((hours - h) * 60);
-        const hh = (h + Math.floor(m / 60)) % 24;
-        const mm = m % 60;
-        return `${hh.toString().padStart(0, '0')}:${mm.toString().padStart(2, '0')}`;
-    };
-
-    return {
-        rise: formatTime(ut_rise),
-        sett: formatTime(ut_set)
-    };
-},
+    // Normalize to 0–24 hours,
       constrain(x) {
         var x = parseFloat(x);
         return x > 1 ? x - 1 : x < 0 ? x + 1 : x;
