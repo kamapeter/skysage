@@ -167,15 +167,15 @@
 
     let cos_H0 = (sin_h0 - sin_lat * sin_dec) / (cos_lat * cos_dec);
 
-// Clamp cos_H0 to the valid range [-1, 1] to prevent NaN from Math.acos()
-cos_H0 = Math.max(-1, Math.min(1, cos_H0));
+    // Clamp cos_H0 to the valid range [-1, 1] to prevent NaN from Math.acos()
+    cos_H0 = Math.max(-1, Math.min(1, cos_H0));
+    
+    // Now safe to check for no rise/set
+    if (Math.abs(cos_H0) >= 1) {  // Use >= to catch exact 1 or -1 from clamping
+        return { rise: "—", sett: "—" };
+    }
 
-// Now safe to check for no rise/set
-if (Math.abs(cos_H0) >= 1) {  // Use >= to catch exact 1 or -1 from clamping
-    return { rise: "—", sett: "—" };
-}
-
-const H0_deg = toDeg(Math.acos(cos_H0));
+    const H0_deg = toDeg(Math.acos(cos_H0));
 
     //const H0_deg = toDeg(Math.acos(Math.max(-1, Math.min(1, cos_H0))));
     const H0_hours = H0_deg / 15;
