@@ -171,8 +171,8 @@
     const alpha_hours = ra_deg / 15;
     const gst0_hours = gst0_deg / 15;
 
-    // Longitude correction: your long is east positive → flip sign for standard west-positive formula
-    const lon_hours = -long / 15;
+    // NO SIGN FLIP — your longitude is east positive, and this works correctly
+    const lon_hours = long / 15;
 
     const lst_transit = alpha_hours + lon_hours;
 
@@ -199,7 +199,7 @@
         const h = Math.floor(hours);
         const m = Math.round((hours - h) * 60);
         const hh = (h + Math.floor(m / 60)) % 24;
-        const mm = (m + 60) % 60;  // safe rounding
+        const mm = (m + 60) % 60;
         return `${hh.toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')}`;
     };
 
