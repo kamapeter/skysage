@@ -270,7 +270,7 @@
         context.timeError = "Error: time field left empty";
       if(changed && context.SharedData.isConfigured()){
         Store.setJD(Number(year),Number(month),Number(day))
-        Store.setSTAngle(new Date(year,month,day),{hr: hour,min:minute,sec: 00},context.SharedData.pos.long,Store.computed.JD)
+        Store.setGST0(Store.computed.JD)
         Store.setBodiesList(context)
       } 
     }
