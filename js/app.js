@@ -121,7 +121,7 @@
                 dec = Number(item.cells[0].position.equatorial.declination.degrees),
                 name = item.cells[0].id;
                 const {lat,long}= Store.State.pos;
-              riseSet = Store.setetRiseSet(Number(long), Number(lat), ra, dec, Store.computed.gst0_deg, name)              
+              riseSet = Store.setRiseSet(Number(long), Number(lat), ra, dec, Store.computed.gst0_deg, name)              
               item.rise = riseSet.rise;
               item.sett = riseSet.sett;
               filtered.push(item)
