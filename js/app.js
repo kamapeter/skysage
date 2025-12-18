@@ -26,7 +26,7 @@
       endpoint: 'https://api.astronomyapi.com/api/v2/bodies',
       from_date: formatDate(new Date),
       to_date: formatDate(new Date),
-      time: localStorage.getItem('time')? localStorage.getItem('time'): '00:00:00',
+      time:  '00:00:00',
       requestOccur: false,
       pos: localStorage.getItem('savedData') ?
         JSON.parse(localStorage.getItem('savedData')) : {},
