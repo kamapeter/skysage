@@ -85,6 +85,12 @@
       ST0 = ST0 < 0 ? ST0 + 360 : ST0;
       Store.setData('sideRealAngle',ST0,'computed')
     },
+    setGST0(JD) {
+    const T = (JD - 2451545.0) / 36525;
+    let gst0 = 280.46061837 + 360.98564736629 * (JD - 2451545) + 0.000387933 * T**2 - (T**3 / 38710000);
+    gst0 = ((gst0 % 360) + 360) % 360; // degrees, 0–360
+    Store.setData('gst0_deg', gst0, 'computed');
+},
     setBodiesList(context) {
       var vm = context.SharedData || context;
       Store.setData('requestOccur', true)
@@ -115,7 +121,7 @@
                 dec = Number(item.cells[0].position.equatorial.declination.degrees),
                 name = item.cells[0].id;
                 const {lat,long}= Store.State.pos;
-              riseSet = Store.setRiseSet(Number(long), Number(lat), ra, dec, Store.computed.sideRealAngle, name)
+              riseSet = Store.setetRiseSet(Number(long), Number(lat), ra, dec, Store.computed.gst0_deg, name)              
               item.rise = riseSet.rise;
               item.sett = riseSet.sett;
               filtered.push(item)
@@ -132,34 +138,83 @@
         })
         .finally(()=> Store.setData('requestOccur',false))
     },
-    setRiseSet(long, lat, ra, dec, st,name) {
-        var h0;
-        if (name == 'sun')
-          h0 = -0.8333;
-        else if(name == 'moon')
-          h0 = 0.125
-        else
-          h0 = 0.5667;
-        var toRad = Math.PI / 180.0,
-          toDeg = 180.0 / Math.PI,
-          cosH0 = (Math.sin(h0 * toRad) - (Math.sin(lat * toRad) * Math.sin(dec * toRad))) / (Math.cos(lat * toRad) * Math.cos(dec * toRad)),
-          H0 = Math.acos(cosH0) * toDeg,
-          trans = Store.constrain(
-            (ra + long - st) / 360),
-          rise = Store.constrain(
-            trans - (H0 / 360)),
-          sett = Store.constrain(trans + (H0 / 360));
-        var hour2Time = function(hr) {
-          var hrFrac = parseFloat(hr).getDeci();
-          var hrs = hr - hrFrac >= 10 ? hr - hrFrac : '0' + (hr - hrFrac),
-            mins = Math.floor(hrFrac * 60) >= 10 ? Math.floor(hrFrac * 60) : '0' + Math.floor(hrFrac * 60);
-          return `${hrs}:${mins}`
-        };
-        return {
-          rise: hour2Time(rise * 24  - 5/60),
-          sett: hour2Time(sett * 24  + 5/60)
-        };
-      },
+    setRiseSet(long, lat, ra_deg, dec_deg, gst0_deg, name) {
+    // Inputs:
+    // long: longitude in degrees (positive east)
+    // lat: latitude in degrees
+    // ra_deg: right ascension at 0h UT in degrees
+    // dec_deg: declination at 0h UT in degrees
+    // gst0_deg: Greenwich Sidereal Time at 0h UT in degrees
+    // name: 'sun', 'moon', or other
+
+    const toRad = deg => deg * Math.PI / 180;
+    const toDeg = rad => rad * 180 / Math.PI;
+
+    // Horizon altitude correction (standard values)
+    let h0;
+    if (name === 'sun') h0 = -0.8333;     // refraction + semi-diameter
+    else if (name === 'moon') h0 = 0.125; // Moon: semi-diameter dominates
+    else h0 = -0.5667;                   // planets/stars: refraction only
+
+    const sin_h0 = Math.sin(toRad(h0));
+    const sin_lat = Math.sin(toRad(lat));
+    const cos_lat = Math.cos(toRad(lat));
+    const sin_dec = Math.sin(toRad(dec_deg));
+    const cos_dec = Math.cos(toRad(dec_deg));
+
+    const cos_H0 = (sin_h0 - sin_lat * sin_dec) / (cos_lat * cos_dec);
+
+    // Check if rises/sets
+    if (Math.abs(cos_H0) > 1) {
+        return { rise: "—", sett: "—" }; // circumpolar or never rises
+    }
+
+    const H0_deg = toDeg(Math.acos(Math.max(-1, Math.min(1, cos_H0))));
+    const H0_hours = H0_deg / 15;
+
+    // Convert RA and GST to hours
+    const alpha_hours = ra_deg / 15;
+    const gst0_hours = gst0_deg / 15;
+
+    // Local sidereal time at transit (in hours)
+    const lst_transit = alpha_hours + long / 15; // long in hours
+
+    // LST at rise/set
+    const lst_rise = lst_transit - H0_hours;
+    const lst_set  = lst_transit + H0_hours;
+
+    // Target GST at rise/set
+    const target_gst_rise = lst_rise - long / 15;
+    const target_gst_set  = lst_set  - long / 15;
+
+    // Normalize to 0-24
+    const normalize = x => ((x % 24) + 24) % 24;
+
+    const gst_rise_norm = normalize(target_gst_rise);
+    const gst_set_norm  = normalize(target_gst_set);
+
+    // Convert to UT using accurate sidereal rate
+    const sidereal_rate = 1.00273790935;
+    let ut_rise = (gst_rise_norm - gst0_hours) / sidereal_rate;
+    let ut_set  = (gst_set_norm  - gst0_hours) / sidereal_rate;
+
+    ut_rise = normalize(ut_rise);
+    ut_set  = normalize(ut_set);
+
+    // Format as HH:MM
+    const formatTime = hours => {
+        const h = Math.floor(hours);
+        const m = Math.round((hours - h) * 60);
+        const hh = (h + Math.floor(m / 60)) % 24;
+        const mm = m % 60;
+        return `${hh.toString().padStart(0, '0')}:${mm.toString().padStart(2, '0')}`;
+    };
+
+    return {
+        rise: formatTime(ut_rise),
+        sett: formatTime(ut_set)
+    };
+},
       constrain(x) {
         var x = parseFloat(x);
         return x > 1 ? x - 1 : x < 0 ? x + 1 : x;
