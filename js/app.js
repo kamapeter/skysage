@@ -171,8 +171,7 @@
     const alpha_hours = ra_deg / 15;
     const gst0_hours = gst0_deg / 15;
 
-    // NO SIGN FLIP — your longitude is east positive, and this works correctly
-    const lon_hours = long / 15;
+    const lon_hours = long / 15;  // east positive - correct for your app
 
     const lst_transit = alpha_hours + lon_hours;
 
