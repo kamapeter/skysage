@@ -121,12 +121,11 @@
                 dec = Number(item.cells[0].position.equatorial.declination.degrees),
                 name = item.cells[0].id;
                 const {lat,long}= Store.State.pos;
-              riseSet = Store.setRiseSet(Number(long), Number(lat), ra, dec, Store.computed.gst0_deg, name)              
+              riseSet = Store.setetRiseSet(Number(long), Number(lat), ra, dec, Store.computed.gst0_deg, name)              
               item.rise = riseSet.rise;
               item.sett = riseSet.sett;
               filtered.push(item)
-
-              
+            
               return filtered
             },[])
             Store.setData('bodiesList', ParsedObj, 'computed');
@@ -270,7 +269,7 @@
         context.timeError = "Error: time field left empty";
       if(changed && context.SharedData.isConfigured()){
         Store.setJD(Number(year),Number(month),Number(day))
-        Store.setGST0(Store.computed.JD)
+        Store.setSTAngle(new Date(year,month,day),{hr: hour,min:minute,sec: 00},context.SharedData.pos.long,Store.computed.JD)
         Store.setBodiesList(context)
       } 
     }
