@@ -146,7 +146,10 @@
     // dec_deg: declination at 0h UT in degrees
     // gst0_deg: Greenwich Sidereal Time at 0h UT in degrees
     // name: 'sun', 'moon', or other
-
+    if (typeof gst0_deg !== 'number' || isNaN(gst0_deg) || gst0_deg === null) {
+        console.error('gst0_deg is invalid:', gst0_deg);
+        return { rise: '—', sett: '—' };
+    }
     const toRad = deg => deg * Math.PI / 180;
     const toDeg = rad => rad * 180 / Math.PI;
 
@@ -162,14 +165,19 @@
     const sin_dec = Math.sin(toRad(dec_deg));
     const cos_dec = Math.cos(toRad(dec_deg));
 
-    const cos_H0 = (sin_h0 - sin_lat * sin_dec) / (cos_lat * cos_dec);
+    let cos_H0 = (sin_h0 - sin_lat * sin_dec) / (cos_lat * cos_dec);
 
-    // Check if rises/sets
-    if (Math.abs(cos_H0) > 1) {
-        return { rise: "—", sett: "—" }; // circumpolar or never rises
-    }
+// Clamp cos_H0 to the valid range [-1, 1] to prevent NaN from Math.acos()
+cos_H0 = Math.max(-1, Math.min(1, cos_H0));
 
-    const H0_deg = toDeg(Math.acos(Math.max(-1, Math.min(1, cos_H0))));
+// Now safe to check for no rise/set
+if (Math.abs(cos_H0) >= 1) {  // Use >= to catch exact 1 or -1 from clamping
+    return { rise: "—", sett: "—" };
+}
+
+const H0_deg = toDeg(Math.acos(cos_H0));
+
+    //const H0_deg = toDeg(Math.acos(Math.max(-1, Math.min(1, cos_H0))));
     const H0_hours = H0_deg / 15;
 
     // Convert RA and GST to hours
@@ -269,7 +277,7 @@
         context.timeError = "Error: time field left empty";
       if(changed && context.SharedData.isConfigured()){
         Store.setJD(Number(year),Number(month),Number(day))
-        Store.setSTAngle(new Date(year,month,day),{hr: hour,min:minute,sec: 00},context.SharedData.pos.long,Store.computed.JD)
+        Store.setGST0(Store.computed.JD)
         Store.setBodiesList(context)
       } 
     }
@@ -870,11 +878,12 @@
     },
     mounted: function (arg) {
       var dateArr = this.SharedData.from_date.split('-'),
-          timeArr = this.SharedData.time.split(':')
-          long = this.SharedData.pos.long;
-      Store.setJD(Number(dateArr[0]),Number(dateArr[1]),Number(dateArr[2]))
+      timeArr = this.SharedData.time.split(':')
+      long = this.SharedData.pos.long;
+      Store.setJD(Number(dateArr[0]),Number(dateArr[1]),Number(dateArr[2]));
+      Store.setGST0(Store.computed.JD);  // ADD THIS
       if (long)
-        Store.setSTAngle(new Date(), {hr: timeArr[0],min:timeArr[1], sec: timeArr[2]},long,this.JD)
+        Store.setSTAngle(new Date(), {hr: timeArr[0],min:timeArr[1], sec: timeArr[2]},long,this.JD);    
     },
     created: function () {
       if(this.SharedData.isConfigured())
