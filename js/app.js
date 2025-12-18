@@ -139,14 +139,6 @@
         .finally(()=> Store.setData('requestOccur',false))
     },
     setRiseSet(long, lat, ra_deg, dec_deg, gst0_deg, name) {
-    // Inputs:
-    // long: longitude in degrees (positive east, negative west - your app's convention)
-    // lat: latitude in degrees
-    // ra_deg: right ascension at 0h UT in degrees
-    // dec_deg: declination at 0h UT in degrees
-    // gst0_deg: Greenwich Sidereal Time at 0h UT in degrees
-    // name: 'sun', 'moon', or other
-
     if (typeof gst0_deg !== 'number' || isNaN(gst0_deg)) {
         console.error('gst0_deg is invalid:', gst0_deg);
         return { rise: '—', sett: '—' };
@@ -155,11 +147,10 @@
     const toRad = deg => deg * Math.PI / 180;
     const toDeg = rad => rad * 180 / Math.PI;
 
-    // Horizon altitude correction
     let h0;
-    if (name.toLowerCase() === 'sun') h0 = -0.8333;     // refraction + semi-diameter
-    else if (name.toLowerCase() === 'moon') h0 = 0.125;  // semi-diameter dominates
-    else h0 = -0.5667;                                  // planets: refraction only
+    if (name.toLowerCase() === 'sun') h0 = -0.8333;
+    else if (name.toLowerCase() === 'moon') h0 = 0.125;
+    else h0 = -0.5667;
 
     const sin_h0 = Math.sin(toRad(h0));
     const sin_lat = Math.sin(toRad(lat));
@@ -168,12 +159,10 @@
     const cos_dec = Math.cos(toRad(dec_deg));
 
     let cos_H0 = (sin_h0 - sin_lat * sin_dec) / (cos_lat * cos_dec);
-
-    // Clamp to prevent NaN from acos
     cos_H0 = Math.max(-1, Math.min(1, cos_H0));
 
     if (Math.abs(cos_H0) >= 1) {
-        return { rise: "—", sett: "—" }; // circumpolar or never rises
+        return { rise: "—", sett: "—" };
     }
 
     const H0_deg = toDeg(Math.acos(cos_H0));
@@ -182,20 +171,43 @@
     const alpha_hours = ra_deg / 15;
     const gst0_hours = gst0_deg / 15;
 
-    // KEY FIX: Flip longitude sign because standard formula expects west positive
-    const lon_hours = -long / 15;  // Convert your east-positive long to west-positive
+    // Longitude correction: your long is east positive → flip sign for standard west-positive formula
+    const lon_hours = -long / 15;
 
-    // Local sidereal time at upper transit (culmination)
     const lst_transit = alpha_hours + lon_hours;
 
-    // LST at rise/set
     const lst_rise = lst_transit - H0_hours;
     const lst_set  = lst_transit + H0_hours;
 
-    // Target GST at rise/set
     const target_gst_rise = lst_rise - lon_hours;
     const target_gst_set  = lst_set  - lon_hours;
 
+    const normalize = x => ((x % 24) + 24) % 24;
+
+    const gst_rise_norm = normalize(target_gst_rise);
+    const gst_set_norm  = normalize(target_gst_set);
+
+    const sidereal_rate = 1.00273790935;
+
+    let ut_rise = (gst_rise_norm - gst0_hours) / sidereal_rate;
+    let ut_set  = (gst_set_norm  - gst0_hours) / sidereal_rate;
+
+    ut_rise = normalize(ut_rise);
+    ut_set  = normalize(ut_set);
+
+    const formatTime = hours => {
+        const h = Math.floor(hours);
+        const m = Math.round((hours - h) * 60);
+        const hh = (h + Math.floor(m / 60)) % 24;
+        const mm = (m + 60) % 60;  // safe rounding
+        return `${hh.toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')}`;
+    };
+
+    return {
+        rise: formatTime(ut_rise),
+        sett: formatTime(ut_set)
+    };
+},
     // Normalize to 0–24 hours,
       constrain(x) {
         var x = parseFloat(x);
