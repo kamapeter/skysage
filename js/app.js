@@ -125,7 +125,8 @@
               item.rise = riseSet.rise;
               item.sett = riseSet.sett;
               filtered.push(item)
-            
+
+              
               return filtered
             },[])
             Store.setData('bodiesList', ParsedObj, 'computed');
