@@ -26,7 +26,7 @@
       endpoint: 'https://api.astronomyapi.com/api/v2/bodies',
       from_date: formatDate(new Date),
       to_date: formatDate(new Date),
-      time:  '00:00:00',
+      time: localStorage.getItem('time')? localStorage.getItem('time'): '18:00:00',
       requestOccur: false,
       pos: localStorage.getItem('savedData') ?
         JSON.parse(localStorage.getItem('savedData')) : {},
@@ -85,12 +85,6 @@
       ST0 = ST0 < 0 ? ST0 + 360 : ST0;
       Store.setData('sideRealAngle',ST0,'computed')
     },
-    setGST0(JD) {
-    const T = (JD - 2451545.0) / 36525;
-    let gst0 = 280.46061837 + 360.98564736629 * (JD - 2451545) + 0.000387933 * T**2 - (T**3 / 38710000);
-    gst0 = ((gst0 % 360) + 360) % 360; // degrees, 0–360
-    Store.setData('gst0_deg', gst0, 'computed');
-},
     setBodiesList(context) {
       var vm = context.SharedData || context;
       Store.setData('requestOccur', true)
@@ -121,7 +115,7 @@
                 dec = Number(item.cells[0].position.equatorial.declination.degrees),
                 name = item.cells[0].id;
                 const {lat,long}= Store.State.pos;
-              riseSet = Store.setRiseSet(Number(long), Number(lat), ra, dec, Store.computed.gst0_deg, name);              
+              riseSet = Store.setRiseSet(Number(long), Number(lat), ra, dec, Store.computed.sideRealAngle, name)
               item.rise = riseSet.rise;
               item.sett = riseSet.sett;
               filtered.push(item)
@@ -138,32 +132,73 @@
         })
         .finally(()=> Store.setData('requestOccur',false))
     },
-    setRiseSet(long, lat, ra, dec, st, name) {
-        var h0;
-        if (name == 'sun') h0 = -0.8333;
-        else if(name == 'moon') h0 = 0.125
-        else h0 = 0.5667;
-    
-        var toRad = Math.PI / 180.0,
-          toDeg = 180.0 / Math.PI,
-          cosH0 = (Math.sin(h0 * toRad) - (Math.sin(lat * toRad) * Math.sin(dec * toRad))) / (Math.cos(lat * toRad) * Math.cos(dec * toRad)),
-          H0 = Math.acos(cosH0) * toDeg,
-          trans = Store.constrain((ra + long - st) / 360),
-          rise = Store.constrain(trans - (H0 / 360)),
-          sett = Store.constrain(trans + (H0 / 360));
-    
-        var hour2Time = function(hr) { ... };
-        return {
-          rise: hour2Time(rise * 24 - 5/60),
-          sett: hour2Time(sett * 24 + 5/60)
-        };
-    },
-    constrain(x) {
-      var x = parseFloat(x);
-      return x > 1 ? x - 1 : x < 0 ? x + 1 : x;
-    },
+constrain(x) {
+  let frac = x - Math.floor(x);
+  if (frac < 0) frac += 1;
+  return frac;  // Always returns [0, 1)
+},
+
+setRiseSet(long, lat, ra, dec, st, name) {
+  let h0;
+  const lowerName = name.toLowerCase();
+  if (lowerName === 'sun') h0 = -0.833;
+  else if (lowerName === 'moon') h0 = 0.125;
+  else h0 = -0.5667;  // planets and other bodies
+
+  const toRad = Math.PI / 180;
+  const toDeg = 180 / Math.PI;
+
+  const latRad = lat * toRad;
+  const decRad = dec * toRad;
+  const h0Rad = h0 * toRad;
+
+  const sin_h0 = Math.sin(h0Rad);
+  const numerator = sin_h0 - Math.sin(latRad) * Math.sin(decRad);
+  const denominator = Math.cos(latRad) * Math.cos(decRad);
+
+  // Handle poles or near-zero denominator
+  if (Math.abs(denominator) < 1e-10) {
+    return h0 > 0 || dec > 80 ? { rise: "Always above", sett: "Always above" }
+                              : { rise: "Always below", sett: "Always below" };
+  }
+
+  const cosH0 = numerator / denominator;
+
+  if (cosH0 > 1) {
+    // Always below horizon
+    return { rise: "Always below", sett: "Always below" };
+  } else if (cosH0 < -1) {
+    // Always above horizon (circumpolar)
+    return { rise: "Always above", sett: "Always above" };
+  }
+
+  // Normal rise/set case
+  const H0 = Math.acos(cosH0) * toDeg;  // degrees
+
+  const trans = Store.constrain((ra + long - st) / 360);
+  const riseFrac = Store.constrain(trans - (H0 / 360));
+  const setFrac  = Store.constrain(trans + (H0 / 360));
+
+  const fracToTime = function(fracDay) {
+    let hours = fracDay * 24;
+    const fullHours = Math.floor(hours);
+    let minutes = Math.round((hours - fullHours) * 60);
+    if (minutes === 60) {
+      minutes = 0;
+      hours += 1;
+    }
+    let h = fullHours % 24;
+    const hrsStr = h < 10 ? '0' + h : '' + h;
+    const minsStr = minutes < 10 ? '0' + minutes : '' + minutes;
+    return `${hrsStr}:${minsStr}`;
+  };
+
+  return {
+    rise: fracToTime(riseFrac),
+    sett: fracToTime(setFrac)
+  };
+},
     setCheckDate(context,event,form) {
-      // ... your existing setCheckDate code continues here unchanged
       var changed = false;
       var [day,month,year,hour,minute] = [form.day.value, form.month.value, form.year.value, form.hour.value,form.minute.value];
       function fmt(digit) {
@@ -213,7 +248,7 @@
         context.timeError = "Error: time field left empty";
       if(changed && context.SharedData.isConfigured()){
         Store.setJD(Number(year),Number(month),Number(day))
-        Store.setGST0(Store.computed.JD)
+        Store.setSTAngle(new Date(year,month,day),{hr: hour,min:minute,sec: 00},context.SharedData.pos.long,Store.computed.JD)
         Store.setBodiesList(context)
       } 
     }
@@ -814,12 +849,11 @@
     },
     mounted: function (arg) {
       var dateArr = this.SharedData.from_date.split('-'),
-      timeArr = this.SharedData.time.split(':')
-      long = this.SharedData.pos.long;
-      Store.setJD(Number(dateArr[0]),Number(dateArr[1]),Number(dateArr[2]));
-      Store.setGST0(Store.computed.JD);  // ADD THIS
+          timeArr = this.SharedData.time.split(':')
+          long = this.SharedData.pos.long;
+      Store.setJD(Number(dateArr[0]),Number(dateArr[1]),Number(dateArr[2]))
       if (long)
-        Store.setSTAngle(new Date(), {hr: timeArr[0],min:timeArr[1], sec: timeArr[2]},long,this.JD);    
+        Store.setSTAngle(new Date(), {hr: timeArr[0],min:timeArr[1], sec: timeArr[2]},long,this.JD)
     },
     created: function () {
       if(this.SharedData.isConfigured())
